@@ -153,19 +153,19 @@ TrainWindow(const int x, const int y)
 
 		pty += 110;
 
-		amplitude = new Fl_Value_Slider(655, pty, 140, 20, "Amp");
-		amplitude->range(0.00, 1.00);
-		amplitude->value(0.10);
-		amplitude->align(FL_ALIGN_LEFT);
-		amplitude->type(FL_HORIZONTAL);
+		treeHeight = new Fl_Value_Slider(655, pty, 140, 20, "Height");
+		treeHeight->range(0.10, 3.00);
+		treeHeight->value(1.00);
+		treeHeight->align(FL_ALIGN_LEFT);
+		treeHeight->type(FL_HORIZONTAL);
 
 		pty += 30;
 
-		waveLength = new Fl_Value_Slider(655, pty, 140, 20, "length");
-		waveLength->range(0.00, 1.00);
-		waveLength->value(0.50);
-		waveLength->align(FL_ALIGN_LEFT);
-		waveLength->type(FL_HORIZONTAL);
+		treeWidth = new Fl_Value_Slider(655, pty, 140, 20, "Width");
+		treeWidth->range(0.10, 3.00);
+		treeWidth->value(1.00);
+		treeWidth->align(FL_ALIGN_LEFT);
+		treeWidth->type(FL_HORIZONTAL);
 
 		pty += 30;
 

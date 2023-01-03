@@ -526,6 +526,7 @@ setProjection()
 #endif
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
+		
 		gluLookAt(
 			point_list[point_index].x, point_list[point_index].y + 20.0f, point_list[point_index].z,
 			point_list[(point_index + 1) % point_list.size()].x,
@@ -535,6 +536,7 @@ setProjection()
 			//0.0f, 1.0f, orient_list[point_index].z
 			0.0f, 1.0f, 0.0f
 			);
+		// glLoadMatrixf
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		gluPerspective(60, aspect, 1.0, 200.0);
@@ -587,22 +589,22 @@ void TrainView::drawStuff(bool doingShadows)
 	//	call your own train drawing code
 	//####################################################################
 	for (int i = 0; i < carAmount; i++) {
-		if (i == carAmount-1)
-			drawTrain(
-				doingShadows,
-				point_list[((point_index + carInterval * i) % point_list.size())],
-				point_list[((point_index + carInterval * i + 1) % point_list.size())],
-				orient_list[((point_index + carInterval * i) % point_list.size())],
-				true
-			);
-		else 
-			drawTrain(
-				doingShadows,
-				point_list[((point_index + carInterval * i) % point_list.size())],
-				point_list[((point_index + carInterval * i + 1) % point_list.size())],
-				orient_list[((point_index + carInterval * i) % point_list.size())],
-				false
-			);
+		//if (i == carAmount-1)
+		//	drawTrain(
+		//		doingShadows,
+		//		point_list[((point_index + carInterval * i) % point_list.size())],
+		//		point_list[((point_index + carInterval * i + 1) % point_list.size())],
+		//		orient_list[((point_index + carInterval * i) % point_list.size())],
+		//		true
+		//	);
+		//else 
+		//	drawTrain(
+		//		doingShadows,
+		//		point_list[((point_index + carInterval * i) % point_list.size())],
+		//		point_list[((point_index + carInterval * i + 1) % point_list.size())],
+		//		orient_list[((point_index + carInterval * i) % point_list.size())],
+		//		false
+		//	);
 	}
 }
 
@@ -866,16 +868,6 @@ drawTrack(bool doingShadow) {
 			}
 		}
 	}
-	// draw obj
-	
-	// drawModel();
-	// draw Tunnel¡A¤À¤T­Ócube¡C
-	//glTranslatef(50.0f, 0.0f, 0.0f);
-	//drawCube(Pnt3f(-20, 0, 15), Pnt3f(-20, 10, 1), Pnt3f(-10, 40, 1), Pnt3f(-10, 0, 1));
-	//drawCube(Pnt3f(-10, 40, 15), Pnt3f(-10, 20, 1), Pnt3f(10, 20, 1), Pnt3f(10, 40, 1));
-	//drawCube(Pnt3f(10, 40, 15), Pnt3f(10, 0, 1), Pnt3f(20, 0, 1), Pnt3f(20, 10, 1));
-	//glTranslatef(-50.0f, 0.0f, 0.0f);
-	//glColor3ub(10, 10, 10);
 }
 void TrainView::
 drawTrain(bool doingShadow, Pnt3f pos0, Pnt3f pos1, Pnt3f ori, bool head) {
@@ -1736,19 +1728,40 @@ initParticle()
 	{
 		for (GLuint i = 0; i < nr_particles; ++i)
 			particles.push_back(Particle());
-
-		//GLfloat* vertices = new GLfloat[nr_particles * 2]();
-		GLfloat* texture_coordinate = new GLfloat[nr_particles * 2]();
-		GLuint* element = new GLuint[nr_particles]();
-	/*	for (int i = 0; i < nr_particles * 2; i++)
-			vertices[i] = 0.0f;*/
-		GLfloat vertices[] = {
-			0,0,0,1,1,0,0,1,1,1,1,0
-		};
-		for (int i = 0; i < nr_particles * 2; i++)
+		// elements * 3 rgb * 3 dots * 2 triangles
+		GLfloat* vertices = new GLfloat[nr_particles * 3 * 3 *2 ]();
+		GLfloat* texture_coordinate = new GLfloat[nr_particles * 2 * 3 * 2]();
+		//GLuint* element = new GLuint[nr_particles]();
+		//GLfloat* vertices = new GLfloat[nr_particles]();
+		for (int i = 0; i < nr_particles * 3 * 3 * 2; i += 3*3*2)
+		{
+			vertices[i] = 0;
+			vertices[i + 1] = 0;
+			vertices[i + 2] = 0;
+			vertices[i + 3] = 1;
+			vertices[i + 4] = 1;
+			vertices[i + 5] = 1;
+			vertices[i + 6] = 0;
+			vertices[i + 7] = 0;
+			vertices[i + 8] = 1;
+			vertices[i + 9] = 1;
+			vertices[i + 10] = 0;
+			vertices[i + 11] = 1;
+			vertices[i + 12] = 1;
+			vertices[i + 13] = 1;
+			vertices[i + 14] = 0;
+			vertices[i + 15] = 0;
+			vertices[i + 16] = 1;
+			vertices[i + 17] = 0;
+		}
+			
+		//GLfloat vertices[] = {
+		//	0,0,0,1,1,0,0,1,1,1,1,0
+		//};
+		for (int i = 0; i < nr_particles * 2 * 3 * 2; i++)
 			texture_coordinate[i] = 0.0f;
-		for (int i = 0; i < nr_particles; i++)
-			element[i] = 0.0f;
+		//for (int i = 0; i < nr_particles; i++)
+		//	element[i] = 0.0f;
 		
 		this->particleVAO = new VAO;
 		this->particleVAO->element_amount = nr_particles;
@@ -1758,8 +1771,8 @@ initParticle()
 
 		// Position attribute
 		glBindBuffer(GL_ARRAY_BUFFER, this->particleVAO->vbo[0]);
-		glBufferData(GL_ARRAY_BUFFER, nr_particles * 2 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
+		glBufferData(GL_ARRAY_BUFFER, nr_particles * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 		glEnableVertexAttribArray(0);
 
 		// Texture Coordinate attribute
@@ -1768,9 +1781,9 @@ initParticle()
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
 		glEnableVertexAttribArray(1);
 
-		//Element attribute
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->particleVAO->ebo);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, nr_particles * sizeof(GLuint), element, GL_STATIC_DRAW);
+		////Element attribute
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->particleVAO->ebo);
+		//glBufferData(GL_ELEMENT_ARRAY_BUFFER, nr_particles * sizeof(GLuint), element, GL_STATIC_DRAW);
 
 		// Unbind VAO
 		glBindVertexArray(0);
@@ -1783,7 +1796,7 @@ initParticle()
 void TrainView::
 drawParticle()
 {
-	glm::vec2 offset = glm::vec2(0.0f, 0.0f);
+	glm::vec3 offset = glm::vec3(0.0f, 0.0f, 0.0f);
 	GLfloat dt = 0.1f;
 	GLuint nr_new_particles = 2;
 	// Add new particles
@@ -1820,7 +1833,7 @@ drawParticle()
 		if (particle.Life > 0.0f)
 		{
 			//cout << "draw\n";
-			glUniform2fv(glGetUniformLocation(this->particleShader->Program, ("offset")), 1, &particle.Position[0]);
+			glUniform3fv(glGetUniformLocation(this->particleShader->Program, ("offset")), 1, &particle.Position[0]);
 			glUniform4fv(glGetUniformLocation(this->particleShader->Program, ("color")), 1, &particle.Color[0]);
 			
 			// from learnOpengl
@@ -1859,14 +1872,15 @@ FirstUnusedParticle()
 }
 
 void TrainView::
-RespawnParticle(Particle& particle, glm::vec2 offset)
+RespawnParticle(Particle& particle, glm::vec3 offset)
 {
-	GLfloat random = ((rand() % 100) - 50) / 1.0f;
+	GLfloat random = ((rand() % 100) - 50) / 10.0f;
 	GLfloat rColor = 0.5 + ((rand() % 100) / 100.0f);
-	particle.Position = glm::vec2(0.0f, 0.0f) + random + offset;
+	particle.Position = glm::vec3(point_list[point_index].x, point_list[point_index].y, point_list[point_index].z) +random + offset;
+	//particle.Position = glm::vec3(0.0f + random, 0.0f + random, 0.0f + random)  + offset;
 	particle.Color = glm::vec4(rColor, rColor, rColor, 1.0f);
-	particle.Life = 1.0f;
-	//particle.Velocity = object.Velocity * 0.1f;
+	particle.Life = 2.0f;
+	particle.Velocity = vec3(1.0f, 1.0f, 1.0f) * 0.1f;
 }
 
 glm::mat4 TrainView::

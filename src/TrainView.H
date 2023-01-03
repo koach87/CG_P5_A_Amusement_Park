@@ -332,7 +332,7 @@ class TrainView : public Fl_Gl_Window
 
 		// particle
 		struct Particle {
-			glm::vec2 Position, Velocity;
+			glm::vec3 Position, Velocity;
 			glm::vec4 Color;
 			GLfloat Life;
 
@@ -344,7 +344,7 @@ class TrainView : public Fl_Gl_Window
 		void drawParticle();
 		GLuint lastUsedParticle = 0;
 		GLuint FirstUnusedParticle();
-		void RespawnParticle(Particle& particle, glm::vec2 offset);
+		void RespawnParticle(Particle& particle, glm::vec3 offset);
 		Shader* particleShader = nullptr;
 		VAO* particleVAO = nullptr;
 
@@ -357,7 +357,7 @@ class TrainView : public Fl_Gl_Window
 		//GLuint particles_color_buffer;
 		
 
-		GLuint nr_particles = 6;
+		GLuint nr_particles = 60;
 		std::vector<Particle> particles;
 
 		
@@ -373,6 +373,7 @@ class TrainView : public Fl_Gl_Window
 
 		// calculate rotation
 		glm::mat4 calRotationXYZ(Pnt3f p0, Pnt3f p1, Pnt3f ori);
+		glm::mat4 translateRotationXYZ;
 
 		
 

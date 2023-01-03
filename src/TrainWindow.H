@@ -95,6 +95,11 @@ class TrainWindow : public Fl_Double_Window {
 		Fl_Value_Slider* amplitude;
 		Fl_Value_Slider* waveLength;
 
+		Fl_Value_Slider* treeHeight;
+		Fl_Value_Slider* treeWidth;
+
+		
+
 		// we have other widgets as part of the sample solution
 		// this is not for 559 students to know about
 		float acc = 0.0f;
