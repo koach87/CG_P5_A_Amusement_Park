@@ -373,8 +373,9 @@ class TrainView : public Fl_Gl_Window
 
 		// calculate rotation
 		glm::mat4 calRotationXYZ(Pnt3f p0, Pnt3f p1, Pnt3f ori);
-		glm::mat4 translateRotationXYZ;
 
+		// height map loading
+		void LoadHeightMap();
 		
 
 };

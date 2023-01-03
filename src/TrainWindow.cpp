@@ -169,6 +169,15 @@ TrainWindow(const int x, const int y)
 
 		pty += 30;
 
+
+		particleLife = new Fl_Value_Slider(655, pty, 140, 20, "Particle Life");
+		particleLife->range(0.10, 3.00);
+		particleLife->value(1.00);
+		particleLife->align(FL_ALIGN_LEFT);
+		particleLife->type(FL_HORIZONTAL);
+
+		pty += 30;
+
 		// TODO: add widgets for all of your fancier features here
 #ifdef EXAMPLE_SOLUTION
 		makeExampleWidgets(this,pty);

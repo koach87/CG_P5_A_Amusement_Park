@@ -98,6 +98,9 @@ class TrainWindow : public Fl_Double_Window {
 		Fl_Value_Slider* treeHeight;
 		Fl_Value_Slider* treeWidth;
 
+		// particle sys setting
+		Fl_Value_Slider* particleLife;
+
 		
 
 		// we have other widgets as part of the sample solution

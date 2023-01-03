@@ -430,9 +430,9 @@ void TrainView::draw()
 	float yellowAmbientDiffuse[] = { 0.0f,0.0f, 1.0f, 0.3f };
 	float position[] = { 0.0f, 100.0f, 0.0f, 1.0f };
 
-	glEnable(GL_LIGHT1);
-	glLightfv(GL_LIGHT1, GL_AMBIENT, yellowAmbientDiffuse);
-	glLightfv(GL_LIGHT1, GL_POSITION, position);
+	//glEnable(GL_LIGHT1);
+	//glLightfv(GL_LIGHT1, GL_AMBIENT, yellowAmbientDiffuse);
+	//glLightfv(GL_LIGHT1, GL_POSITION, position);
 
 
 	//*********************************************************************
@@ -476,6 +476,7 @@ void TrainView::draw()
 
 	drawParticle();
 
+	//LoadHeightMap();
 	t_time += 0.01f;	
 }
 
@@ -979,77 +980,8 @@ drawTrain(bool doingShadow, Pnt3f pos0, Pnt3f pos1, Pnt3f ori, bool head) {
 	glEnd();
 
 
-	//if (head) {
-	//	// another cube
-	////Up
-	//	glBegin(GL_QUADS);
-	//	glNormal3f(0, 1, 0);
-	//	if (!doingShadow)
-	//		glColor3ub(0, 0, 255);
-	//	glTranslatef(0.0f, 20.0f, 0.0f);
-
-	//	glVertex3f(pos0_u.x +0.5*ori.x, pos0_u.y +  ori.y+10, pos0_u.z +  0.5*ori.z);
-	//	glVertex3f(pos0_u.x - 0.5*ori.x, pos0_u.y -  ori.y+10, pos0_u.z -  0.5*ori.z);
-	//	glVertex3f(pos1_u.x - 0.5*ori.x, pos1_u.y -  ori.y+10, pos1_u.z -  0.5*ori.z);
-	//	glVertex3f(pos1_u.x + 0.5*ori.x, pos1_u.y +  ori.y+10, pos1_u.z +  0.5*ori.z);
-
-	//	glEnd();
-
-	//	//Left
-	//	glBegin(GL_QUADS);
-	//	glNormal3f(-1, 0, 0);
-	//	if (!doingShadow)
-	//		glColor3ub(100, 0, 0);
-	//	glVertex3f(pos0_u.x - 0.5 * ori.x , pos0_u.y - ori.y + 10, pos0_u.z - 0.5 * ori.z);
-	//	glVertex3f(pos1_u.x - 0.5 * ori.x, pos1_u.y - ori.y + 10, pos1_u.z - 0.5 * ori.z);
-	//	glVertex3f(pos1.x - 0.5 * ori.x, pos1.y - ori.y + 10, pos1.z - 0.5 * ori.z);
-	//	glVertex3f(pos0.x - 0.5 * ori.x , pos0.y - ori.y + 10, pos0.z - 0.5 * ori.z);
-	//	glEnd();
-
-	//	//Right
-	//	glBegin(GL_QUADS);
-	//	glNormal3f(1, 0, 0);
-	//	if (!doingShadow)
-	//		glColor3ub(100, 0, 0);
-
-	//	glVertex3f(pos1_u.x + 0.5 * ori.x, pos1_u.y + ori.y + 10, pos1_u.z + 0.5 * ori.z);
-	//	glVertex3f(pos0_u.x + 0.5 * ori.x , pos0_u.y + ori.y + 10, pos0_u.z + 0.5 * ori.z);
-	//	glVertex3f(pos0.x + 0.5 * ori.x , pos0.y + ori.y + 10, pos0.z + 0.5 * ori.z);
-	//	glVertex3f(pos1.x + 0.5 * ori.x, pos1.y + ori.y + 10, pos1.z + 0.5 * ori.z);
-
-	//	glEnd();
-
-	//	//Front
-	//	glBegin(GL_QUADS);
-	//	glNormal3f(0, 0, -1);
-	//	if (!doingShadow)
-	//		glColor3ub(100, 0, 0);
-	//	glVertex3f(pos1_u.x - 0.5 * ori.x, pos1_u.y - ori.y + 10, pos1_u.z - 0.5 * ori.z);
-	//	glVertex3f(pos1_u.x + 0.5 * ori.x, pos1_u.y + ori.y + 10, pos1_u.z + 0.5 * ori.z);
-	//	glVertex3f(pos1.x + 0.5 * ori.x, pos1.y + ori.y + 10, pos1.z + 0.5 * ori.z);
-	//	glVertex3f(pos1.x - 0.5 * ori.x, pos1.y - ori.y + 10, pos1.z - 0.5 * ori.z);
-
-	//	glEnd();
-
-	//	//Back
-	//	glBegin(GL_QUADS);
-	//	glNormal3f(0, 0, 1);
-	//	if (!doingShadow)
-	//		glColor3ub(100, 0, 0);
-	//	glVertex3f(pos0_u.x + 0.5 * ori.x , pos0_u.y + ori.y + 10, pos0_u.z + 0.5 * ori.z);
-	//	glVertex3f(pos0_u.x - 0.5 * ori.x , pos0_u.y - ori.y + 10, pos0_u.z - 0.5 * ori.z);
-	//	glVertex3f(pos0.x - 0.5 * ori.x , pos0.y - ori.y + 10, pos0.z - 0.5 * ori.z);
-	//	glVertex3f(pos0.x + 0.5 * ori.x , pos0.y + ori.y + 10, pos0.z + 0.5 * ori.z);
-	//	glEnd();
-	//}
 	
-
-	//glTranslatef((point_list[(point_index + carInterval * i) % point_list.size()].x+ point_list[(point_index + carInterval * i + 20) % point_list.size()].x)/2,
-	//	(point_list[(point_index + carInterval * i) % point_list.size()].y+ point_list[(point_index + carInterval * i + 20) % point_list.size()].y)/2+14,
-	//	(point_list[(point_index + carInterval * i) % point_list.size()].z+ point_list[(point_index + carInterval * i + 20) % point_list.size()].z)/2);
-	//glRotatef()
 	glTranslatef(pos0.x , pos0.y +15, pos0.z );
-	//rotationMatrix = glm::eulerAngleXYZ(-rotationVector.x, -rotationVector.y, -rotationVector.z);
 	rotationMatrix = glm::eulerAngleXYZ(0.0f, 1.0f, 0.0f);
 	
 	//glMultMatrixf(glm::value_ptr(rotationMatrix));
@@ -1060,15 +992,10 @@ drawTrain(bool doingShadow, Pnt3f pos0, Pnt3f pos1, Pnt3f ori, bool head) {
 	drawCube(Pnt3f(0, -2, 1), Pnt3f(-1, -2, 1), Pnt3f(-2, -4, 1), Pnt3f(-1, -4, 1));
 	drawCube(Pnt3f(0, -2, 1), Pnt3f(1, -2, 1), Pnt3f(2, -4, 1), Pnt3f(1, -4, 1));
 
-	//rotationMatrix = glm::inverse(glm::eulerAngleXYZ(-rotationVector.x, -rotationVector.y, -rotationVector.z));
 	rotationMatrix = glm::inverse(glm::eulerAngleXYZ(0.0f, 1.0f, 0.0f));
-	//glMultMatrixf(glm::value_ptr(rotationMatrix));
 
 	glTranslatef(-pos0.x , -pos0.y -15, -pos0.z );
-	//glTranslatef(-(point_list[(point_index + carInterval * i) % point_list.size()].x + point_list[(point_index + carInterval * i + 20) % point_list.size()].x) / 2,
-	//	-(point_list[(point_index + carInterval * i) % point_list.size()].y + point_list[(point_index + carInterval * i + 20) % point_list.size()].y) / 2 - 14,
-	//	-(point_list[(point_index + carInterval * i) % point_list.size()].z + point_list[(point_index + carInterval * i + 20) % point_list.size()].z) / 2);
-	//glColor3ub(10, 10, 10);
+	
 }
 
 
@@ -1089,6 +1016,8 @@ initModel()
 		//ourModel = new Model(PROJECT_DIR"/src/SnowTerrain/SnowTerrain.obj");
 		//ourModel = new Model(PROJECT_DIR"/src/car/bugatti.obj");
 		ourModel = new Model(PROJECT_DIR"/src/backpack/backpack.obj");
+		//ourModel = new Model(PROJECT_DIR"/src/lowpolytree/lowpolytree.obj");
+		//ourModel = new Model(PROJECT_DIR"/src/Palm_Tree/Palm_Tree.obj");
 	}
 	
 }
@@ -1879,7 +1808,7 @@ RespawnParticle(Particle& particle, glm::vec3 offset)
 	particle.Position = glm::vec3(point_list[point_index].x, point_list[point_index].y, point_list[point_index].z) +random + offset;
 	//particle.Position = glm::vec3(0.0f + random, 0.0f + random, 0.0f + random)  + offset;
 	particle.Color = glm::vec4(rColor, rColor, rColor, 1.0f);
-	particle.Life = 2.0f;
+	particle.Life = tw->particleLife->value();
 	particle.Velocity = vec3(1.0f, 1.0f, 1.0f) * 0.1f;
 }
 
@@ -1943,3 +1872,80 @@ calRotationXYZ(Pnt3f p0, Pnt3f p1, Pnt3f direction)
 
 }
 
+void TrainView::
+LoadHeightMap()
+{
+	int width, height, nChannels;
+	unsigned char* data = stbi_load(PROJECT_DIR"/Images/heightmap.png",
+		&width, &height, &nChannels,
+		0);
+	std::vector<float> vertices;
+	float yScale = 64.0f / 256.0f, yShift = 16.0f;  // apply a scale+shift to the height data
+	for (unsigned int i = 0; i < height; i++)
+	{
+		for (unsigned int j = 0; j < width; j++)
+		{
+			// retrieve texel for (i,j) tex coord
+			unsigned char* texel = data + (j + width * i) * nChannels;
+			// raw height at coordinate
+			unsigned char y = texel[0];
+
+			// vertex
+			vertices.push_back(-height / 2.0f + i);        // v.x
+			vertices.push_back((int)y * yScale - yShift); // v.y
+			vertices.push_back(-width / 2.0f + j);        // v.z
+		}
+	}
+	stbi_image_free(data);
+
+	std::vector<unsigned int> indices;
+	for (unsigned int i = 0; i < height - 1; i++)       // for each row a.k.a. each strip
+	{
+		for (unsigned int j = 0; j < width; j++)      // for each column
+		{
+			for (unsigned int k = 0; k < 2; k++)      // for each side of the strip
+			{
+				indices.push_back(j + width * (i + k));
+			}
+		}
+	}
+	const unsigned int NUM_STRIPS = height - 1;
+	const unsigned int NUM_VERTS_PER_STRIP = width * 2;
+
+	
+
+	GLuint terrainVAO, terrainVBO, terrainEBO;
+	glGenVertexArrays(1, &terrainVAO);
+	glBindVertexArray(terrainVAO);
+
+	glGenBuffers(1, &terrainVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, terrainVBO);
+	glBufferData(GL_ARRAY_BUFFER,
+		vertices.size() * sizeof(float),       // size of vertices buffer
+		&vertices[0],                          // pointer to first element
+		GL_STATIC_DRAW);
+
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glGenBuffers(1, &terrainEBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, terrainEBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+		indices.size() * sizeof(unsigned int), // size of indices buffer
+		&indices[0],                           // pointer to first element
+		GL_STATIC_DRAW);
+
+	glBindVertexArray(terrainVAO);
+	// render the mesh triangle strip by triangle strip - each row at a time
+	for (unsigned int strip = 0; strip < NUM_STRIPS; ++strip)
+	{
+		glDrawElements(GL_TRIANGLE_STRIP,   // primitive type
+			NUM_VERTS_PER_STRIP, // number of indices to render
+			GL_UNSIGNED_INT,     // index data type
+			(void*)(sizeof(unsigned int)
+				* NUM_VERTS_PER_STRIP
+				* strip)); // offset to starting index
+	}
+	
+}
