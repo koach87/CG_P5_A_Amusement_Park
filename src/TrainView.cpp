@@ -1493,10 +1493,10 @@ initMonitor()
 
 	if (!this->monitor) {
 		GLfloat  vertices[] = {
-			-1.0f, 0.0f,
+			-1.0f, 1.0f,
 			-1.0f, -1.0f,
-			0.0f, -1.0f,
-			0.0f, 0.0f
+			1.0f, -1.0f,
+			1.0f, 1.0f
 		};
 		GLfloat  texture_coordinate[] = {
 			0.0f, 1.0f,
