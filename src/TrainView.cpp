@@ -358,6 +358,8 @@ void TrainView::draw()
 		initSineWater(); 
 		initModel();
 		initParticle();
+		initModelTree();
+		initModelTerrain();
 
 	}
 	else
@@ -444,7 +446,7 @@ void TrainView::draw()
 	setupFloor();
 
 	glDisable(GL_LIGHTING);
-	drawFloor(400,8);
+	//drawFloor(400,8);
 
 
 	//*********************************************************************
@@ -463,19 +465,20 @@ void TrainView::draw()
 		unsetupShadows();
 	}
 
-
 	setUBO();
 	glBindBufferRange(
 		GL_UNIFORM_BUFFER, /*binding point*/0, this->commom_matrices->ubo, 0, this->commom_matrices->size);
 
 	drawSkybox();
-
-	//stbi_set_flip_vertically_on_load(true);
-
 	drawModel();
-
 	drawParticle();
-
+	drawModelTree(glm::vec3(100.0f + (float)tw->treeX->value(), 0.0f + (float)tw->treeY->value(), 50.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
+	drawModelTree(glm::vec3(-50.0f + (float)tw->treeX->value(), 0.0f + (float)tw->treeY->value(), -50.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
+	drawModelTree(glm::vec3(50.0f + (float)tw->treeX->value(), 0.0f + (float)tw->treeY->value(), -100.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
+	drawModelTree(glm::vec3(-100.0f + (float)tw->treeX->value(), 0.0f + (float)tw->treeY->value(), 50.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
+	drawModelTree(glm::vec3(20.0f + (float)tw->treeX->value(), 0.0f + (float)tw->treeY->value(), -30.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
+	drawModelTree(glm::vec3(-100.0f + (float)tw->treeX->value(), 0.0f + (float)tw->treeY->value(), -100.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
+	drawModelTerrain();
 	//LoadHeightMap();
 	t_time += 0.01f;	
 }
@@ -1016,6 +1019,7 @@ initModel()
 		//ourModel = new Model(PROJECT_DIR"/src/SnowTerrain/SnowTerrain.obj");
 		//ourModel = new Model(PROJECT_DIR"/src/car/bugatti.obj");
 		ourModel = new Model(PROJECT_DIR"/src/backpack/backpack.obj");
+		ourModel = new Model(PROJECT_DIR"/src/Palm_Tree/Palm_Tree.obj");
 		//ourModel = new Model(PROJECT_DIR"/src/lowpolytree/lowpolytree.obj");
 		//ourModel = new Model(PROJECT_DIR"/src/Palm_Tree/Palm_Tree.obj");
 	}
@@ -1036,12 +1040,11 @@ drawModel()
 	// add rotate matrix
 	model_matrix = model_matrix * calRotationXYZ(point_list[point_index], point_list[((point_index + 1) % point_list.size())], orient_list[point_index]);
 
-	model_matrix = glm::scale(model_matrix, glm::vec3(10.0f, 10.0f, 10.0f));
+	model_matrix = glm::scale(model_matrix, glm::vec3(0.3f));
 	//model_matrix = glm::eulerAngleXYZ(0.0f, 10.0f, 0.0f) * model_matrix;
-
+	//model_matrix = glm::rotate(model_matrix, 90.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 	glUniformMatrix4fv(
 		glGetUniformLocation(this->modelShader->Program, "model"), 1, GL_FALSE, &model_matrix[0][0]);
-	
 	
 	//cout << ourModel->meshes.size();
 	ourModel->Draw(*this->modelShader);
@@ -1948,4 +1951,72 @@ LoadHeightMap()
 				* strip)); // offset to starting index
 	}
 	
+}
+
+
+
+void TrainView::
+initModelTree()
+{
+	if (!modelTreeShader) {
+		this->modelTreeShader = new Shader(PROJECT_DIR "/src/shaders/1.model_loading.vs",
+			nullptr, nullptr, nullptr,
+			PROJECT_DIR "/src/shaders/1.model_loading.fs");
+		ourModelTree = new Model(PROJECT_DIR"/src/Palm_Tree/Palm_Tree.obj");
+	}
+}
+
+void TrainView::
+drawModelTree(glm::vec3 trans, float scale)
+{
+	// don't forget to enable shader before setting uniforms
+	this->modelTreeShader->Use();
+
+	glm::mat4 model_matrix = glm::mat4();
+	
+	model_matrix = glm::translate(model_matrix, trans);
+	model_matrix = glm::scale(model_matrix, glm::vec3(scale));
+	model_matrix = glm::rotate(model_matrix, (float)glm::radians(90.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
+
+	glUniformMatrix4fv(
+		glGetUniformLocation(this->modelTreeShader->Program, "model"), 1, GL_FALSE, &model_matrix[0][0]);
+
+	//cout << ourModel->meshes.size();
+	ourModelTree->Draw(*this->modelTreeShader);
+
+	glUseProgram(0);
+}
+
+
+void TrainView::
+initModelTerrain()
+{
+	if (!modelTerrainShader) {
+		this->modelTerrainShader = new Shader(PROJECT_DIR "/src/shaders/1.model_loading.vs",
+			nullptr, nullptr, nullptr,
+			PROJECT_DIR "/src/shaders/1.model_loading.fs");
+
+		ourModelTerrain = new Model(PROJECT_DIR"/src/Small Tropical Island/Small Tropical Island.obj");
+	}
+}
+
+void TrainView::
+drawModelTerrain()
+{
+	// don't forget to enable shader before setting uniforms
+	this->modelTerrainShader->Use();
+
+	glm::mat4 model_matrix = glm::mat4();
+
+	model_matrix = glm::translate(model_matrix, glm::vec3(0.0f,-70.0f,0.0f));
+	model_matrix = glm::scale(model_matrix, glm::vec3(0.8f));
+	//model_matrix = glm::rotate(model_matrix, (float)glm::radians(90.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
+
+	glUniformMatrix4fv(
+		glGetUniformLocation(this->modelTerrainShader->Program, "model"), 1, GL_FALSE, &model_matrix[0][0]);
+
+	//cout << ourModel->meshes.size();
+	ourModelTerrain->Draw(*this->modelTerrainShader);
+
+	glUseProgram(0);
 }

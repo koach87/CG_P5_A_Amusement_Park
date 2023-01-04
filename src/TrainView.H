@@ -378,4 +378,20 @@ class TrainView : public Fl_Gl_Window
 		void LoadHeightMap();
 		
 
+
+		// model shader - tree
+
+		void initModelTree();
+		void drawModelTree(glm::vec3, float);
+		Shader* modelTreeShader = nullptr;
+		Model* ourModelTree = nullptr;
+
+
+		// model shader - tree
+
+		void initModelTerrain();
+		void drawModelTerrain();
+		Shader* modelTerrainShader = nullptr;
+		Model* ourModelTerrain = nullptr;
+
 };

@@ -153,19 +153,35 @@ TrainWindow(const int x, const int y)
 
 		pty += 110;
 
-		treeHeight = new Fl_Value_Slider(655, pty, 140, 20, "Height");
-		treeHeight->range(0.10, 3.00);
-		treeHeight->value(1.00);
-		treeHeight->align(FL_ALIGN_LEFT);
-		treeHeight->type(FL_HORIZONTAL);
+		treeX = new Fl_Value_Slider(655, pty, 140, 20, "Tree - X");
+		treeX->range(-200, 200);
+		treeX->value(0.00);
+		treeX->align(FL_ALIGN_LEFT);
+		treeX->type(FL_HORIZONTAL);
 
 		pty += 30;
 
-		treeWidth = new Fl_Value_Slider(655, pty, 140, 20, "Width");
-		treeWidth->range(0.10, 3.00);
-		treeWidth->value(1.00);
-		treeWidth->align(FL_ALIGN_LEFT);
-		treeWidth->type(FL_HORIZONTAL);
+		treeY = new Fl_Value_Slider(655, pty, 140, 20, "Tree - Y");
+		treeY->range(-200, 200);
+		treeY->value(0.00);
+		treeY->align(FL_ALIGN_LEFT);
+		treeY->type(FL_HORIZONTAL);
+
+		pty += 30;
+
+		treeZ = new Fl_Value_Slider(655, pty, 140, 20, "Tree - Z");
+		treeZ->range(-200, 200);
+		treeZ->value(0.00);
+		treeZ->align(FL_ALIGN_LEFT);
+		treeZ->type(FL_HORIZONTAL);
+
+		pty += 30;
+
+		treeScale = new Fl_Value_Slider(655, pty, 140, 20, "Tree Scale");
+		treeScale->range(0.01, 1.00);
+		treeScale->value(0.15);
+		treeScale->align(FL_ALIGN_LEFT);
+		treeScale->type(FL_HORIZONTAL);
 
 		pty += 30;
 

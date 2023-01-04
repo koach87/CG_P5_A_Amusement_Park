@@ -95,8 +95,10 @@ class TrainWindow : public Fl_Double_Window {
 		Fl_Value_Slider* amplitude;
 		Fl_Value_Slider* waveLength;
 
-		Fl_Value_Slider* treeHeight;
-		Fl_Value_Slider* treeWidth;
+		Fl_Value_Slider* treeX;
+		Fl_Value_Slider* treeY;
+		Fl_Value_Slider* treeZ;
+		Fl_Value_Slider* treeScale;
 
 		// particle sys setting
 		Fl_Value_Slider* particleLife;
