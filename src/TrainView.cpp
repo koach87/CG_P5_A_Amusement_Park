@@ -78,63 +78,6 @@ using namespace cv;
 #ifdef EXAMPLE_SOLUTION
 #	include "TrainExample/TrainExample.H"
 #endif
-//// for read 3d model
-//float transAngle(float angle_) {
-//	if (sinf(angle_) * cosf(angle_) >= 0) {
-//		return angle_;
-//	}
-//	if(sinf(angle_) <= 0) {
-//		angle_ -= 180;
-//		return angle_;
-//	}
-//	angle_ += 180;
-//	return angle_;
-//}
-//class obj3dmodel
-//{
-//	struct vertex {
-//		double x;
-//		double y;
-//		double z;
-//	};
-//	struct face {
-//		unsigned int v1, v2, v3;
-//	};
-//	std::vector<vertex> vetexes;
-//	std::vector<face> faces;
-//
-//public:
-//	void readfile(const char* filename);
-//	void draw();
-//};
-//void obj3dmodel::readfile(const char* filename)
-//{
-//	std::string s;
-//	std::ifstream fin(filename);
-//	if (!fin)
-//		return;
-//	while (fin >> s)
-//	{
-//		switch (*s.c_str())
-//		{
-//		case 'v':
-//		{
-//			vertex v;
-//			fin >> v.x >> v.y >> v.z;
-//			this->vetexes.push_back(v);
-//		}
-//		break;
-//		case 'f':
-//		{
-//			face f;
-//			fin >> f.v1 >> f.v2 >> f.v3;
-//			faces.push_back(f);
-//		}
-//		break;
-//		}
-//	}
-//}
-
 // curve function
 // state 1,2,3 = linear, cardinal, B-Spline 
 // pos 1/0 = pos
@@ -359,6 +302,7 @@ void TrainView::draw()
 
 		initModel();
 		initParticle();
+		initParticle2D();
 		initModelTree();
 		initModelTerrain();
 		initModelChair();
@@ -475,6 +419,7 @@ void TrainView::draw()
 	drawSkybox();
 	drawModel();
 	drawParticle();
+	drawParticle2D();
 	drawModelTree(glm::vec3(100.0f + (float)tw->treeX->value(), -50.0f + (float)tw->treeY->value(), 50.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
 	drawModelTree(glm::vec3(-50.0f + (float)tw->treeX->value(), -50.0f + (float)tw->treeY->value(), -50.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
 	drawModelTree(glm::vec3(50.0f + (float)tw->treeX->value(), -50.0f + (float)tw->treeY->value(), -100.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
@@ -1776,6 +1721,172 @@ RespawnParticle(Particle& particle, glm::vec3 offset)
 	particle.Color = glm::vec4(rColor, rColor, rColor, 1.0f);
 	particle.Life = tw->particleLife->value();
 	particle.Velocity = vec3(1.0f, 1.0f, 1.0f) * 0.1f;
+}
+
+void TrainView::
+initParticle2D()
+{
+
+
+	if (!this->particleShader2D)
+		this->particleShader2D = new
+		Shader(
+			PROJECT_DIR "/build/particle2D.vert",
+			nullptr, nullptr, nullptr,
+			PROJECT_DIR "/build/particle2D.frag");
+
+	if (!this->particleVAO2D)
+	{
+		for (GLuint i = 0; i < nr_particles2D; ++i)
+			particles2D.push_back(Particle2D());
+		// elements * 3 rgb * 2 dots * 2 triangles
+		GLfloat* vertices = new GLfloat[nr_particles2D * 3 * 2 * 2]();
+		GLfloat* texture_coordinate = new GLfloat[nr_particles2D * 2 * 2 * 2]();
+		//GLuint* element = new GLuint[nr_particles]();
+		//GLfloat* vertices = new GLfloat[nr_particles]();
+		float rainWidth = 0.2f;
+		float rainHeight = 1.0f;
+		for (int i = 0; i < nr_particles2D * 3 * 2 * 2; i += 3 * 2 * 2)
+		{
+			vertices[i] = -rainWidth;
+			vertices[i + 1] = rainHeight;
+			vertices[i + 2] = rainWidth;
+			vertices[i + 3] = rainHeight;
+			vertices[i + 4] = -rainWidth;
+			vertices[i + 5] = -rainHeight;
+			vertices[i + 6] = -rainWidth;
+			vertices[i + 7] = -rainHeight;
+			vertices[i + 8] = rainWidth;
+			vertices[i + 9] = rainHeight;
+			vertices[i + 10] = rainWidth;
+			vertices[i + 11] = -rainHeight;
+		}
+
+		for (int i = 0; i < nr_particles2D * 2 * 2 * 2; i++)
+			texture_coordinate[i] = 0.0f;
+		//for (int i = 0; i < nr_particles; i++)
+		//	element[i] = 0.0f;
+
+		this->particleVAO2D = new VAO;
+		this->particleVAO2D->element_amount = nr_particles2D;
+		glGenVertexArrays(1, &this->particleVAO2D->vao);
+		glGenBuffers(3, this->particleVAO2D->vbo);
+		glBindVertexArray(this->particleVAO2D->vao);
+
+		// Position attribute
+		glBindBuffer(GL_ARRAY_BUFFER, this->particleVAO2D->vbo[0]);
+		glBufferData(GL_ARRAY_BUFFER, nr_particles2D * 2 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
+		glEnableVertexAttribArray(0);
+
+		// Texture Coordinate attribute
+		glBindBuffer(GL_ARRAY_BUFFER, this->particleVAO2D->vbo[1]);
+		glBufferData(GL_ARRAY_BUFFER, nr_particles2D * 2 * sizeof(GLfloat), texture_coordinate, GL_STATIC_DRAW);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (GLvoid*)0);
+		glEnableVertexAttribArray(1);
+
+		////Element attribute
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->particleVAO->ebo);
+		//glBufferData(GL_ELEMENT_ARRAY_BUFFER, nr_particles * sizeof(GLuint), element, GL_STATIC_DRAW);
+
+		// Unbind VAO
+		glBindVertexArray(0);
+	}
+
+
+}
+
+
+void TrainView::
+drawParticle2D()
+{
+	glm::vec2 offset = glm::vec2(0.0f);
+	GLfloat dt = 0.1f;
+	GLuint nr_new_particles = 2;
+	// Add new particles
+	for (GLuint i = 0; i < nr_new_particles; ++i)
+	{
+		int unusedParticle = FirstUnusedParticle2D();
+		RespawnParticle2D(particles2D[unusedParticle], offset);
+	}
+	// Update all particles
+	for (GLuint i = 0; i < nr_particles2D; ++i)
+	{
+		Particle2D& p = particles2D[i];
+		p.Life -= dt; // reduce life
+		if (p.Life > 0.0f)
+		{   // particle is alive, thus update
+			p.Position -= p.Velocity * dt;
+			p.Color.a -= dt * 2.5;
+		}
+	}
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	particleShader2D->Use();
+
+	glm::mat4 view;
+	glm::mat4 projection;
+
+	glGetFloatv(GL_MODELVIEW_MATRIX, &view[0][0]);
+	glGetFloatv(GL_PROJECTION_MATRIX, &projection[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(this->particleShader->Program, "view"), 1, GL_FALSE, &view[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(this->particleShader->Program, "projection"), 1, GL_FALSE, &projection[0][0]);
+
+	for (Particle2D particle : particles2D)
+	{
+		if (particle.Life > 0.0f)
+		{
+			//cout << "draw\n";
+			glUniform2fv(glGetUniformLocation(this->particleShader->Program, ("offset")), 1, &particle.Position[0]);
+			glUniform4fv(glGetUniformLocation(this->particleShader->Program, ("color")), 1, &particle.Color[0]);
+
+			// from learnOpengl
+			//particleShader.SetVector2f("offset", particle.Position);
+			//particleShader.SetVector4f("color", particle.Color);
+			//particleTexture.Bind();
+			glBindVertexArray(this->particleVAO->vao);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+			//glDrawElements(GL_TRIANGLES, this->sineWater->element_amount, GL_UNSIGNED_INT, 0);
+			glBindVertexArray(0);
+		}
+	}
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+GLuint TrainView::
+FirstUnusedParticle2D()
+{
+	// Search from last used particle, this will usually return almost instantly
+	for (GLuint i = lastUsedParticle; i < nr_particles2D; ++i) {
+		if (particles2D[i].Life <= 0.0f) {
+			lastUsedParticle = i;
+			return i;
+		}
+	}
+	// Otherwise, do a linear search
+	for (GLuint i = 0; i < lastUsedParticle; ++i) {
+		if (particles2D[i].Life <= 0.0f) {
+			lastUsedParticle = i;
+			return i;
+		}
+	}
+	// Override first particle if all others are alive
+	lastUsedParticle = 0;
+	return 0;
+}
+
+void TrainView::
+RespawnParticle2D(Particle2D& particle, glm::vec2 offset)
+{
+	GLfloat random = ((rand() % 100) - 50) / 10.0f;
+	GLfloat rColor = 0.5 + ((rand() % 100) / 100.0f);
+	//particle.Position = glm::vec3(point_list[point_index].x, point_list[point_index].y, point_list[point_index].z) + random + offset;
+	particle.Position = glm::vec2(0.0f) + random + offset;
+	particle.Color = glm::vec4(rColor, rColor, rColor, 1.0f);
+
+	particle.Life = 3.0f;
+	//particle.Life = tw->particleLife2D->value();
+	particle.Velocity = glm::vec2(1.0f) * 0.1f;
 }
 
 glm::mat4 TrainView::

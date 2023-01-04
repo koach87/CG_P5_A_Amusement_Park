@@ -190,8 +190,7 @@ TrainWindow(const int x, const int y)
 
 		pty += 30;
 
-
-		particleLife = new Fl_Value_Slider(655, pty, 140, 20, "ParticleLife");
+		particleLife = new Fl_Value_Slider(655, pty, 140, 20, "P_Life");
 		particleLife->range(0.10, 3.00);
 		particleLife->value(1.00);
 		particleLife->align(FL_ALIGN_LEFT);

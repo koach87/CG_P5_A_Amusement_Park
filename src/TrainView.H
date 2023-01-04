@@ -332,7 +332,7 @@ class TrainView : public Fl_Gl_Window
 
 
 
-		// particle
+		// particle 3d
 		struct Particle {
 			glm::vec3 Position, Velocity;
 			glm::vec4 Color;
@@ -341,7 +341,7 @@ class TrainView : public Fl_Gl_Window
 			Particle()
 				: Position(0.0f), Velocity(0.0f), Color(1.0f), Life(0.0f) { }
 		};
-
+		// 3d for car
 		void initParticle();
 		void drawParticle();
 		GLuint lastUsedParticle = 0;
@@ -350,18 +350,29 @@ class TrainView : public Fl_Gl_Window
 		Shader* particleShader = nullptr;
 		VAO* particleVAO = nullptr;
 
-		////Shader* particleShader = nullptr;
-		////VAO* particle = nullptr;
-		//unsigned int MaxParticles = 20;
-		//unsigned int ParticlesCount = 20;
-		//GLuint billboard_vertex_buffer;
-		//GLuint particles_position_buffer;
-		//GLuint particles_color_buffer;
-		
-
 		GLuint nr_particles = 60;
 		std::vector<Particle> particles;
 
+		// particle 2d
+		struct Particle2D {
+			glm::vec2 Position, Velocity;
+			glm::vec4 Color;
+			GLfloat Life;
+
+			Particle2D()
+				: Position(0.0f), Velocity(0.0f), Color(1.0f), Life(0.0f) { }
+		};
+		// 2d for rain
+		void initParticle2D();
+		void drawParticle2D();
+		GLuint lastUsedParticle2D = 0;
+		GLuint FirstUnusedParticle2D();
+		void RespawnParticle2D(Particle2D& particle, glm::vec2 offset);
+		Shader* particleShader2D = nullptr;
+		VAO* particleVAO2D = nullptr;
+
+		GLuint nr_particles2D = 60;
+		std::vector<Particle2D> particles2D;
 		
 
 
