@@ -303,7 +303,7 @@ void TrainView::draw()
 		initUBO();
 		initModel();
 		initParticle();
-		initParticle2D();
+		//initParticle2D();
 		initModelTree();
 		initModelTerrain();
 		initModelChair();
@@ -424,7 +424,7 @@ void TrainView::draw()
 	drawSkybox();
 	drawModel();
 	drawParticle();
-	drawParticle2D();
+	//drawParticle2D();
 	drawModelTree(glm::vec3(100.0f + (float)tw->treeX->value(), -50.0f + (float)tw->treeY->value(), 50.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
 	drawModelTree(glm::vec3(-50.0f + (float)tw->treeX->value(), -50.0f + (float)tw->treeY->value(), -50.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
 	drawModelTree(glm::vec3(50.0f + (float)tw->treeX->value(), -50.0f + (float)tw->treeY->value(), -100.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
@@ -1484,12 +1484,64 @@ drawSineWater()
 void TrainView::
 initMonitor()
 {
-	if (!this->monitorShader)
-		this->monitorShader = new
-		Shader(
-			PROJECT_DIR "/src/shaders/monitorVS.glsl",
-			nullptr, nullptr, nullptr,
-			PROJECT_DIR "/src/shaders/monitorFS.glsl");
+	int filtermode = tw->filterBrowser->value();
+	
+	if (filtermode != lastMode)
+	{
+		switch (filtermode)
+		{
+		case 1:
+			this->monitorShader = new
+				Shader(
+					PROJECT_DIR "/src/shaders/monitorVS.glsl",
+					nullptr, nullptr, nullptr,
+					PROJECT_DIR "/src/shaders/monitorFS.glsl"
+				);
+			break;
+		case 2:
+			this->monitorShader = new
+				Shader(
+					PROJECT_DIR "/src/shaders/monitorVS.glsl",
+					nullptr, nullptr, nullptr,
+					PROJECT_DIR "/src/shaders/GrayScale.glsl"
+				);
+			break;
+		case 3:
+			this->monitorShader = new
+				Shader(
+					PROJECT_DIR "/src/shaders/monitorVS.glsl",
+					nullptr, nullptr, nullptr,
+					PROJECT_DIR "/src/shaders/Blur.glsl"
+				);
+			break;
+		case 4:
+			this->monitorShader = new
+				Shader(
+					PROJECT_DIR "/src/shaders/monitorVS.glsl",
+					nullptr, nullptr, nullptr,
+					PROJECT_DIR "/src/shaders/Toonify Post Processing Filter.glsl"
+				);
+			break;
+		case 5:
+			this->monitorShader = new
+				Shader(
+					PROJECT_DIR "/src/shaders/monitorVS.glsl",
+					nullptr, nullptr, nullptr,
+					PROJECT_DIR "/src/shaders/Thermal Vision.glsl"
+				);
+			break;
+		default:
+			this->monitorShader = new
+				Shader(
+					PROJECT_DIR "/src/shaders/monitorVS.glsl",
+					nullptr, nullptr, nullptr,
+					PROJECT_DIR "/src/shaders/monitorFS.glsl"
+				);
+			break;
+		}
+		lastMode = filtermode;
+	}
+		
 
 	if (!this->monitor) {
 		GLfloat  vertices[] = {

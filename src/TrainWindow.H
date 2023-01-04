@@ -104,13 +104,14 @@ class TrainWindow : public Fl_Double_Window {
 		// particle sys setting
 		Fl_Value_Slider* particleLife;
 
-		// train add or delete
-		Fl_Button* addTrain;
-		Fl_Button* delTrain;
-
 		// we have other widgets as part of the sample solution
 		// this is not for 559 students to know about
 		float acc = 0.0f;
+
+		// filter browser
+		Fl_Browser* filterBrowser;
+
+
 
 #ifdef EXAMPLE_SOLUTION
 	ExampleWidgets ew;

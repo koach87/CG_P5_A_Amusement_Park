@@ -294,6 +294,7 @@ class TrainView : public Fl_Gl_Window
 		Shader* monitorShader = nullptr;
 		VAO* monitor = nullptr;
 		Texture2D* monitorTexture = nullptr;
+		int lastMode = -1;
 
 
 

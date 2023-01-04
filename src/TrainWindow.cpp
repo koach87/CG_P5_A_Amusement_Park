@@ -140,23 +140,22 @@ TrainWindow(const int x, const int y)
 		Fl_Button* rzp = new Fl_Button(700,pty,30,20,"R-Z");
 		rzp->callback((Fl_Callback*)rmzCB,this);
 
-		pty+=30;
-
-
-		addTrain = new Fl_Button(600, pty, 100, 20, "Add Train");
-		addTrain->callback((Fl_Callback*)rmzCB, this);
-		delTrain = new Fl_Button(700, pty, 100, 20, "Del Train");
-		addTrain->callback((Fl_Callback*)rmzCB, this);
-		//// add option to select mode
-		//waveBrowser = new Fl_Browser(605, pty, 120, 75, "Wave Type");
-		//waveBrowser->type(2);		// select
-		//waveBrowser->callback((Fl_Callback*)damageCB, this);
-		//waveBrowser->add("Sine wave");
-		//waveBrowser->add("Heightmap");
-		//waveBrowser->select(1);
-
 		pty += 30;
-		//pty += 110;
+
+		// browser to select spline types
+		// TODO: make sure these choices are the same as what the code supports
+		filterBrowser = new Fl_Browser(605, pty, 180, 90, "Filter");
+		filterBrowser->type(2);		// select
+		filterBrowser->callback((Fl_Callback*)damageCB, this);
+		filterBrowser->add("None");
+		filterBrowser->add("GrayScale");
+		filterBrowser->add("Blur");
+		filterBrowser->add("Toonify Post Processing");
+		filterBrowser->add("Thermal Vision");
+		filterBrowser->select(1);
+
+		pty += 110;
+
 
 		treeX = new Fl_Value_Slider(655, pty, 140, 20, "Tree - X");
 		treeX->range(-200, 200);
@@ -182,7 +181,7 @@ TrainWindow(const int x, const int y)
 
 		pty += 30;
 
-		treeScale = new Fl_Value_Slider(655, pty, 140, 20, "Tree Scale");
+		treeScale = new Fl_Value_Slider(655, pty, 140, 20, "Tree - S");
 		treeScale->range(0.01, 1.00);
 		treeScale->value(0.15);
 		treeScale->align(FL_ALIGN_LEFT);
@@ -190,7 +189,7 @@ TrainWindow(const int x, const int y)
 
 		pty += 30;
 
-		particleLife = new Fl_Value_Slider(655, pty, 140, 20, "P_Life");
+		particleLife = new Fl_Value_Slider(655, pty, 140, 20, "P - Life");
 		particleLife->range(0.10, 3.00);
 		particleLife->value(1.00);
 		particleLife->align(FL_ALIGN_LEFT);
