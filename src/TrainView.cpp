@@ -362,6 +362,7 @@ void TrainView::draw()
 		initModelTree();
 		initModelTerrain();
 		initModelChair();
+		initFerris();
 
 	}
 	else
@@ -484,6 +485,8 @@ void TrainView::draw()
 	drawModelChair(35);
 	drawModelChair(55);
 	drawModelChair(75);
+	drawFerris();
+	//drawCube();
 	//LoadHeightMap();
 	t_time += 0.01f;	
 }
@@ -1010,47 +1013,6 @@ drawTrain(bool doingShadow, Pnt3f pos0, Pnt3f pos1, Pnt3f ori, bool head) {
 void TrainView::
 drawWheel() {
 }
-
-void TrainView::
-initModel()
-{
-	if (!modelShader) {
-		this->modelShader = new Shader(PROJECT_DIR "/src/shaders/1.model_loading.vs",
-			nullptr, nullptr, nullptr,
-			PROJECT_DIR "/src/shaders/1.model_loading.fs");
-
-		ourModel = new Model(PROJECT_DIR"/src/Thomas/Thomas.obj");
-	}
-	
-}
-
-void TrainView::
-drawModel() 
-{
-	// don't forget to enable shader before setting uniforms
-	this->modelShader->Use();
-
-	glm::mat4 model_matrix = glm::mat4();
-	model_matrix = glm::translate(model_matrix, glm::vec3(point_list[point_index].x, point_list[point_index].y, point_list[point_index].z));
-
-	//model_matrix = glm::translate(model_matrix, glm::vec3(0, -10, 0));
-
-	// add rotate matrix
-	model_matrix = model_matrix * calRotationXYZ(point_list[point_index], point_list[((point_index + 1) % point_list.size())], orient_list[point_index]);
-
-	model_matrix = glm::scale(model_matrix, glm::vec3(5.0f));
-	//model_matrix = glm::eulerAngleXYZ(0.0f, 10.0f, 0.0f) * model_matrix;
-	model_matrix = glm::rotate(model_matrix, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	model_matrix = glm::rotate(model_matrix, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	glUniformMatrix4fv(
-		glGetUniformLocation(this->modelShader->Program, "model"), 1, GL_FALSE, &model_matrix[0][0]);
-	
-	//cout << ourModel->meshes.size();
-	ourModel->Draw(*this->modelShader);
-
-	glUseProgram(0);
-}
-
 
 void TrainView::drawTunnel() {
 	
@@ -1643,6 +1605,8 @@ initMonitor()
 //	//unbind shader(switch to fixed pipeline)
 //	glUseProgram(0);
 //}
+
+
 void TrainView::
 initParticle()
 {
@@ -1953,6 +1917,47 @@ LoadHeightMap()
 }
 
 
+void TrainView::
+initModel()
+{
+	if (!modelShader) {
+		this->modelShader = new Shader(PROJECT_DIR "/src/shaders/1.model_loading.vs",
+			nullptr, nullptr, nullptr,
+			PROJECT_DIR "/src/shaders/1.model_loading.fs");
+
+		ourModel = new Model(PROJECT_DIR"/src/Thomas/Thomas.obj");
+	}
+
+}
+
+void TrainView::
+drawModel()
+{
+	// don't forget to enable shader before setting uniforms
+	this->modelShader->Use();
+
+	glm::mat4 model_matrix = glm::mat4();
+	model_matrix = glm::translate(model_matrix, glm::vec3(point_list[point_index].x, point_list[point_index].y, point_list[point_index].z));
+
+	//model_matrix = glm::translate(model_matrix, glm::vec3(0, -10, 0));
+
+	// add rotate matrix
+	model_matrix = model_matrix * calRotationXYZ(point_list[point_index], point_list[((point_index + 1) % point_list.size())], orient_list[point_index]);
+
+	model_matrix = glm::scale(model_matrix, glm::vec3(5.0f));
+	//model_matrix = glm::eulerAngleXYZ(0.0f, 10.0f, 0.0f) * model_matrix;
+	model_matrix = glm::rotate(model_matrix, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	model_matrix = glm::rotate(model_matrix, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glUniformMatrix4fv(
+		glGetUniformLocation(this->modelShader->Program, "model"), 1, GL_FALSE, &model_matrix[0][0]);
+
+	//cout << ourModel->meshes.size();
+	ourModel->Draw(*this->modelShader);
+
+	glUseProgram(0);
+}
+
+
 
 void TrainView::
 initModelTree()
@@ -2067,4 +2072,332 @@ drawModelChair(int interval)
 	ourModelChair->Draw(*this->modelChairShader);
 
 	glUseProgram(0);
+}
+
+
+#define M_PI 3.1414
+#define WHEEL 1
+#define CABIN 2
+float toRad(float deg)
+{
+	return (deg * M_PI) / 180;
+}
+void TrainView::
+initFerris()
+{
+	if (isInitFerris)
+		return;
+	glNewList(WHEEL, GL_COMPILE);
+	glColor3f(0.8, 0, 0.0);
+	// Center front
+	glBegin(GL_TRIANGLE_FAN);
+	glVertex3f(0, 0, 15);
+	for (float angle = 0; angle <= 360; angle += 0.1)
+	{
+		glVertex3f(5 * cos(toRad(angle)), 5 * sin(toRad(angle)), 15);
+	}
+	glEnd();
+	// Center 
+	glBegin(GL_QUAD_STRIP);
+	for (float angle = 0; angle <= 360; angle += 0.1) {
+		glVertex3f(5 * cos(toRad(angle)), 5 * sin(toRad(angle)), 15);
+		glVertex3f(5 * cos(toRad(angle)), 5 * sin(toRad(angle)), -15);
+	}
+	glEnd();
+
+	// Center back
+	glBegin(GL_TRIANGLE_FAN);
+	glVertex3f(0, 0, -15);
+	for (float angle = 0; angle <= 360; angle += 0.1) {
+		glVertex3f(5 * cos(toRad(angle)), 5 * sin(toRad(angle)), -15);
+	}
+	glEnd();
+
+	// Wheel structure front
+	for (float angle = 0; angle <= 360; angle += 0.1) {
+		glBegin(GL_POLYGON);
+		glVertex3f(30 * cos(toRad(angle)), 30 * sin(toRad(angle)), 4);
+		glVertex3f(28 * cos(toRad(angle)), 28 * sin(toRad(angle)), 4);
+		glVertex3f(28 * cos(toRad(angle + 0.2)), 28 * sin(toRad(angle + 0.2)), 4);
+		glVertex3f(30 * cos(toRad(angle + 0.2)), 30 * sin(toRad(angle + 0.2)), 4);
+		glEnd();
+	}
+
+	glBegin(GL_QUAD_STRIP);
+	for (float angle = 0; angle <= 360; angle += 0.1) {
+		glVertex3f(30 * cos(toRad(angle)), 30 * sin(toRad(angle)), 4);
+		glVertex3f(30 * cos(toRad(angle)), 30 * sin(toRad(angle)), 3.5);
+	}
+	glEnd();
+
+	glBegin(GL_QUAD_STRIP);
+	for (float angle = 0; angle <= 360; angle += 0.1) {
+		glVertex3f(28 * cos(toRad(angle)), 28 * sin(toRad(angle)), 4);
+		glVertex3f(28 * cos(toRad(angle)), 28 * sin(toRad(angle)), 3.5);
+	}
+	glEnd();
+
+	// Wheel structure front
+	for (float angle = 0; angle <= 360; angle += 0.1) {
+		glBegin(GL_POLYGON);
+		glVertex3f(30 * cos(toRad(angle)), 30 * sin(toRad(angle)), 3.5);
+		glVertex3f(28 * cos(toRad(angle)), 28 * sin(toRad(angle)), 3.5);
+		glVertex3f(28 * cos(toRad(angle + 0.2)), 28 * sin(toRad(angle + 0.2)), 3.5);
+		glVertex3f(30 * cos(toRad(angle + 0.2)), 30 * sin(toRad(angle + 0.2)), 3.5);
+		glEnd();
+	}
+
+
+
+	// Wheel structure back
+	for (float angle = 0; angle <= 360; angle += 0.1) {
+		glBegin(GL_POLYGON);
+		glVertex3f(30 * cos(toRad(angle)), 30 * sin(toRad(angle)), -4);
+		glVertex3f(28 * cos(toRad(angle)), 28 * sin(toRad(angle)), -4);
+		glVertex3f(28 * cos(toRad(angle + 0.2)), 28 * sin(toRad(angle + 0.2)), -4);
+		glVertex3f(30 * cos(toRad(angle + 0.2)), 30 * sin(toRad(angle + 0.2)), -4);
+		glEnd();
+	}
+
+	glBegin(GL_QUAD_STRIP);
+	for (float angle = 0; angle <= 360; angle += 0.1) {
+		glVertex3f(30 * cos(toRad(angle)), 30 * sin(toRad(angle)), -4);
+		glVertex3f(30 * cos(toRad(angle)), 30 * sin(toRad(angle)), -3.5);
+	}
+	glEnd();
+
+	glBegin(GL_QUAD_STRIP);
+	for (float angle = 0; angle <= 360; angle += 0.1) {
+		glVertex3f(28 * cos(toRad(angle)), 28 * sin(toRad(angle)), -4);
+		glVertex3f(28 * cos(toRad(angle)), 28 * sin(toRad(angle)), -3.5);
+	}
+	glEnd();
+
+	// Wheel structure back
+	for (float angle = 0; angle <= 360; angle += 0.1) {
+		glBegin(GL_POLYGON);
+		glVertex3f(30 * cos(toRad(angle)), 30 * sin(toRad(angle)), -3.5);
+		glVertex3f(28 * cos(toRad(angle)), 28 * sin(toRad(angle)), -3.5);
+		glVertex3f(28 * cos(toRad(angle + 0.2)), 28 * sin(toRad(angle + 0.2)), -3.5);
+		glVertex3f(30 * cos(toRad(angle + 0.2)), 30 * sin(toRad(angle + 0.2)), -3.5);
+		glEnd();
+	}
+
+	glEndList();
+
+	// CAbin
+	glNewList(CABIN, GL_COMPILE);
+	glColor3f(0.5, 0, 0);
+	// Bar
+	glBegin(GL_TRIANGLE_FAN);
+	glVertex3f(0, 0, -4);
+	for (float angle = 0; angle <= 360; angle += 0.1) {
+		glVertex3f(0.5 * cos(toRad(angle)), 0.5 * sin(toRad(angle)), -4);
+	}
+	glEnd();
+
+	glBegin(GL_QUAD_STRIP);
+	for (float angle = 0; angle <= 360; angle += 0.1) {
+		glVertex3f(0.5 * cos(toRad(angle)), 0.5 * sin(toRad(angle)), -3.5);
+		glVertex3f(0.5 * cos(toRad(angle)), 0.5 * sin(toRad(angle)), 3.5);
+	}
+	glEnd();
+
+	glBegin(GL_TRIANGLE_FAN);
+	glVertex3f(0, 0, 4);
+	for (float angle = 0; angle <= 360; angle += 0.1) {
+		glVertex3f(0.5 * cos(toRad(angle)), 0.5 * sin(toRad(angle)), 4);
+	}
+	glEnd();
+
+
+	// Cono
+	glPushMatrix();
+	glColor3f(0.95, 0.67, 0.06);
+	glTranslatef(0, -5, 0);
+	glRotatef(-90, 1, 0, 0);
+	//glutSolidCone(2, 5, 50, 50);
+	glPopMatrix();
+
+	glEndList();
+	isInitFerris = true;
+}
+
+void TrainView::
+drawFerris()
+{
+	w_rot += w_speed;
+	//cout << w_rot << "\n";
+	glPushMatrix();
+	glTranslatef(150, 0, 150);
+	glPushMatrix();
+	glColor3f(0.02, 0.22, 0.02);
+	glTranslatef(0, -50, 0);
+	glScalef(50, 2, 50);
+	drawCube();
+	glPopMatrix();
+
+	glPushMatrix();
+	glCallList(WHEEL);
+	glPopMatrix();
+
+	glPushMatrix();
+	glRotatef(w_rot, 0, 0, 1);
+	for (int i = 0; i < n_bars; i++) {
+		c_radius = (360.0 / n_bars) * i;
+		glPushMatrix();
+		// Axis
+		glPushMatrix();
+		glColor3f(0.92, 0.12, 0.12);
+		glRotatef(c_radius, 0, 0, 1);
+		glRotatef(-11, 1, 0, 0);
+		glTranslatef(0, 14.5, 10);
+		glScalef(1, 28, 0.5);
+		drawCube();
+		glPopMatrix();
+
+		glPushMatrix();
+		glColor3f(0.92, 0.12, 0.12);
+		glRotatef(c_radius, 0, 0, 1);
+		glRotatef(11, 1, 0, 0);
+		glTranslatef(0, 14.5, -10);
+		glScalef(1, 28, 0.5);
+		drawCube();
+		glPopMatrix();
+
+		glTranslatef(28 * cos(toRad(c_radius)), 28 * sin(toRad(c_radius)), 0);
+		glRotatef(-w_rot, 0, 0, 1);
+		glCallList(CABIN);
+		glPopMatrix();
+	}
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(0.3, 0.3, 0.3);
+	glRotatef(-30, 0, 0, 1);
+	glTranslatef(0, -25, 12);
+	glScalef(3, 40, 2);
+	drawCube();
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(0.3, 0.3, 0.3);
+	glRotatef(30, 0, 0, 1);
+	glTranslatef(0, -25, 12);
+	glScalef(3, 40, 2);
+	drawCube();
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(0.3, 0.3, 0.3);
+	glRotatef(-30, 0, 0, 1);
+	glTranslatef(0, -25, -12);
+	glScalef(3, 40, 2);
+	drawCube();
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor3f(0.3, 0.3, 0.3);
+	glRotatef(30, 0, 0, 1);
+	glTranslatef(0, -25, -12);
+	glScalef(3, 40, 2);
+	drawCube();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(20, -30, 30);
+	glColor3f(1, 0, 0);
+	glPushMatrix();
+	glRotatef(-90, 1, 0, 0);
+	drawCube();
+	glPopMatrix();
+	glColor3f(1, 0.5, 0.5);
+	drawCube();
+	glPushMatrix();
+	glTranslatef(0, -2, 0);
+	glScalef(0.5, 4, 0.5);
+	drawCube();
+	glPopMatrix();
+	
+	glPushMatrix();
+	glTranslatef(-0.9, -6, 0);
+	glRotatef(-20, 0, 0, 1);
+	glScalef(0.5, 5, 0.5);
+	drawCube();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(0.9, -6, 0);
+	glRotatef(20, 0, 0, 1);
+	glScalef(0.5, 5, 0.5);
+	drawCube();
+	glPopMatrix();
+	
+	glPushMatrix();
+	glTranslatef(-0.9, -2, 0);
+	glRotatef(-120, 0, 0, 1);
+	glScalef(0.5, 2, 0.5);
+	drawCube();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(0.9, -2, 0);
+	glRotatef(120, 0, 0, 1);
+	glScalef(0.5, 2, 0.5);
+	drawCube();
+	glPopMatrix();
+	glPopMatrix();
+	glPopMatrix();
+}
+
+void TrainView::
+drawCube()
+{
+	glPushMatrix();
+	glBegin(GL_QUADS);                // Begin drawing the color cube with 6 quads
+									  // Top face (y = 1.0f)
+									  // Define vertices in counter-clockwise (CCW) order with normal pointing out
+	glColor3f(0.0f, 1.0f, 0.0f);     // Green
+	glVertex3f(1.0f, 1.0f, -1.0f);
+	glVertex3f(-1.0f, 1.0f, -1.0f);
+	glVertex3f(-1.0f, 1.0f, 1.0f);
+	glVertex3f(1.0f, 1.0f, 1.0f);
+
+	// Bottom face (y = -1.0f)
+	glColor3f(1.0f, 0.5f, 0.0f);     // Orange
+	glVertex3f(1.0f, -1.0f, 1.0f);
+	glVertex3f(-1.0f, -1.0f, 1.0f);
+	glVertex3f(-1.0f, -1.0f, -1.0f);
+	glVertex3f(1.0f, -1.0f, -1.0f);
+
+	// Front face  (z = 1.0f)
+	glColor3f(1.0f, 0.0f, 0.0f);     // Red
+	glVertex3f(1.0f, 1.0f, 1.0f);
+	glVertex3f(-1.0f, 1.0f, 1.0f);
+	glVertex3f(-1.0f, -1.0f, 1.0f);
+	glVertex3f(1.0f, -1.0f, 1.0f);
+
+	// Back face (z = -1.0f)
+	glColor3f(1.0f, 1.0f, 0.0f);     // Yellow
+	glVertex3f(1.0f, -1.0f, -1.0f);
+	glVertex3f(-1.0f, -1.0f, -1.0f);
+	glVertex3f(-1.0f, 1.0f, -1.0f);
+	glVertex3f(1.0f, 1.0f, -1.0f);
+
+	// Left face (x = -1.0f)
+	glColor3f(0.0f, 0.0f, 1.0f);     // Blue
+	glVertex3f(-1.0f, 1.0f, 1.0f);
+	glVertex3f(-1.0f, 1.0f, -1.0f);
+	glVertex3f(-1.0f, -1.0f, -1.0f);
+	glVertex3f(-1.0f, -1.0f, 1.0f);
+
+	// Right face (x = 1.0f)
+	glColor3f(1.0f, 0.0f, 1.0f);     // Magenta
+	glVertex3f(1.0f, 1.0f, -1.0f);
+	glVertex3f(1.0f, 1.0f, 1.0f);
+	glVertex3f(1.0f, -1.0f, 1.0f);
+	glVertex3f(1.0f, -1.0f, -1.0f);
+	glEnd();  // End of drawing color-cube
+
+	glPopMatrix();
 }

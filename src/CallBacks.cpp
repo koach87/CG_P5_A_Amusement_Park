@@ -247,4 +247,3 @@ void rmzCB(Fl_Widget*, TrainWindow* tw)
 {
 	rollz(tw, -1);
 }
-

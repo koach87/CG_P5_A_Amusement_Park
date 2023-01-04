@@ -330,6 +330,8 @@ class TrainView : public Fl_Gl_Window
 		VAO* monitor = nullptr;
 		Texture2D* monitorTexture = nullptr;
 
+
+
 		// particle
 		struct Particle {
 			glm::vec3 Position, Velocity;
@@ -402,4 +404,21 @@ class TrainView : public Fl_Gl_Window
 		void drawModelChair(int);
 		Shader* modelChairShader = nullptr;
 		Model* ourModelChair = nullptr;
+
+		// ferris-wheel
+		void drawCube();
+		void initFerris();
+		bool isInitFerris = false;
+		void drawFerris();
+		GLfloat rotx = 0;
+		GLfloat roty = 0;
+
+		GLint n_bars = 16;
+		GLfloat c_radius;
+
+		GLfloat w_rot = 0;
+		GLfloat w_speed = 0.25;
+
+		bool anim = true;
+		bool inv_rot = false;
 };

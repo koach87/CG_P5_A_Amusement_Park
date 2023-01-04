@@ -143,6 +143,10 @@ TrainWindow(const int x, const int y)
 		pty+=30;
 
 
+		addTrain = new Fl_Button(600, pty, 100, 20, "Add Train");
+		addTrain->callback((Fl_Callback*)rmzCB, this);
+		delTrain = new Fl_Button(700, pty, 100, 20, "Del Train");
+		addTrain->callback((Fl_Callback*)rmzCB, this);
 		//// add option to select mode
 		//waveBrowser = new Fl_Browser(605, pty, 120, 75, "Wave Type");
 		//waveBrowser->type(2);		// select
@@ -151,7 +155,8 @@ TrainWindow(const int x, const int y)
 		//waveBrowser->add("Heightmap");
 		//waveBrowser->select(1);
 
-		pty += 110;
+		pty += 30;
+		//pty += 110;
 
 		treeX = new Fl_Value_Slider(655, pty, 140, 20, "Tree - X");
 		treeX->range(-200, 200);

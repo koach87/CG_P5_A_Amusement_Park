@@ -95,6 +95,7 @@ class TrainWindow : public Fl_Double_Window {
 		Fl_Value_Slider* amplitude;
 		Fl_Value_Slider* waveLength;
 
+		// tree setting
 		Fl_Value_Slider* treeX;
 		Fl_Value_Slider* treeY;
 		Fl_Value_Slider* treeZ;
@@ -103,7 +104,9 @@ class TrainWindow : public Fl_Double_Window {
 		// particle sys setting
 		Fl_Value_Slider* particleLife;
 
-		
+		// train add or delete
+		Fl_Button* addTrain;
+		Fl_Button* delTrain;
 
 		// we have other widgets as part of the sample solution
 		// this is not for 559 students to know about
