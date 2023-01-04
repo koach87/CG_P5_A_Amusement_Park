@@ -297,10 +297,8 @@ void TrainView::draw()
 		//initiailize VAO, VBO, Shader...
 
 
-		//initMonitor();
-		//if (!this->fbos)
-		//	this->fbos = new WaterFrameBuffers();
-
+		initMonitor();
+		initFbo();
 		initSkyboxShader();
 		initUBO();
 		initModel();
@@ -314,6 +312,7 @@ void TrainView::draw()
 	}
 	else
 		throw std::runtime_error("Could not initialize GLAD!");
+
 
 	// Set up the view port
 	glViewport(0,0,w(),h());
@@ -404,6 +403,9 @@ void TrainView::draw()
 	// once for real, and then once for shadows
 	//*********************************************************************
 
+	// fbo - start record view
+	filterFbos->bindFilterFrameBuffer();
+
 	glEnable(GL_LIGHTING);
 	setupObjects();
 	drawStuff();
@@ -419,7 +421,6 @@ void TrainView::draw()
 	glBindBufferRange(
 		GL_UNIFORM_BUFFER, /*binding point*/0, this->commom_matrices->ubo, 0, this->commom_matrices->size);
 
-	//fbos->bindReflectionFrameBuffer();
 	drawSkybox();
 	drawModel();
 	drawParticle();
@@ -435,10 +436,16 @@ void TrainView::draw()
 	drawModelChair(55);
 	drawModelChair(75);
 	drawFerris();
-	//fbos->unbindCurrentFrameBuffer();
-	//drawMonitor(0);
 	//drawCube();
 	//LoadHeightMap();
+
+
+	// fbo - stop record view
+	filterFbos->unbindCurrentFrameBuffer();
+
+	// fbo - draw view
+	drawMonitor(0);
+
 	t_time += 0.01f;	
 }
 
@@ -1446,11 +1453,11 @@ drawSineWater()
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 	glUniform1i(glGetUniformLocation(this->sineWaterShader->Program, "skybox"), 0);
 
-	//周圍的圍牆
-	this->fbos->refractionTexture2D.bind(1);
-	glUniform1i(glGetUniformLocation(this->sineWaterShader->Program, "refractionTexture"), 1);
-	this->fbos->reflectionTexture2D.bind(2);
-	glUniform1i(glGetUniformLocation(this->sineWaterShader->Program, "reflectionTexture"), 2);
+	////周圍的圍牆
+	//this->fbos->refractionTexture2D.bind(1);
+	//glUniform1i(glGetUniformLocation(this->sineWaterShader->Program, "refractionTexture"), 1);
+	//this->fbos->reflectionTexture2D.bind(2);
+	//glUniform1i(glGetUniformLocation(this->sineWaterShader->Program, "reflectionTexture"), 2);
 
 	//取得相機座標位置
 	GLfloat* view_matrix = new GLfloat[16];
@@ -1532,17 +1539,19 @@ initMonitor()
 }
 
 void TrainView::
-drawMonitor(int mode)
+drawMonitor(int mode = 0)
 {
 	//bind shader
 	this->monitorShader->Use();
 
-	if (mode == 1)
-		this->fbos->reflectionTexture2D.bind(0);
-	else
-	{
-		this->fbos->refractionTexture2D.bind(0);
-	}
+	//if (mode == 1)
+	//	this->fbos->reflectionTexture2D.bind(0);
+	//else
+	//{
+	//	this->fbos->refractionTexture2D.bind(0);
+	//}
+
+	this->filterFbos->filterTexture2D.bind(0);
 	glUniform1i(glGetUniformLocation(this->monitorShader->Program, "u_texture"), 0);
 
 	//bind VAO
@@ -2517,4 +2526,12 @@ drawCube()
 	glEnd();  // End of drawing color-cube
 
 	glPopMatrix();
+}
+
+
+void TrainView::
+initFbo()
+{
+	if (!this->filterFbos)
+		this->filterFbos = new FilterFrameBuffers();
 }
