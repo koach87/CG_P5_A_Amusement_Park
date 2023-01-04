@@ -498,9 +498,9 @@ setProjection()
 		glLoadIdentity();
 		
 		gluLookAt(
-			point_list[point_index].x, point_list[point_index].y + 20.0f, point_list[point_index].z,
+			point_list[point_index].x, point_list[point_index].y + 40.0f, point_list[point_index].z,
 			point_list[(point_index + 1) % point_list.size()].x,
-			point_list[(point_index + 1) % point_list.size()].y + 20.0f,
+			point_list[(point_index + 1) % point_list.size()].y + 40.0f,
 			point_list[(point_index + 1) % point_list.size()].z,
 			//orient_list[point_index].x, orient_list[point_index].y, orient_list[point_index].z
 			//0.0f, 1.0f, orient_list[point_index].z
@@ -1627,9 +1627,9 @@ initParticle()
 	if (!this->particleShader)
 		this->particleShader = new
 		Shader(
-			PROJECT_DIR "/build/particle.vert",
+			PROJECT_DIR "/src/shaders/particle.vert",
 			nullptr, nullptr, nullptr,
-			PROJECT_DIR "/build/particle.frag");
+			PROJECT_DIR "/src/shaders/particle.frag");
 
 	if (!this->particleVAO)
 	{
@@ -1783,7 +1783,7 @@ RespawnParticle(Particle& particle, glm::vec3 offset)
 {
 	GLfloat random = ((rand() % 100) - 50) / 10.0f;
 	GLfloat rColor = 0.5 + ((rand() % 100) / 100.0f);
-	particle.Position = glm::vec3(point_list[point_index].x, point_list[point_index].y, point_list[point_index].z) +random + offset;
+	particle.Position = glm::vec3(point_list[point_index].x-10, point_list[point_index].y+25, point_list[point_index].z) +random + offset;
 	//particle.Position = glm::vec3(0.0f + random, 0.0f + random, 0.0f + random)  + offset;
 	particle.Color = glm::vec4(rColor, rColor, rColor, 1.0f);
 	particle.Life = tw->particleLife->value();
@@ -1798,9 +1798,9 @@ initParticle2D()
 	if (!this->particleShader2D)
 		this->particleShader2D = new
 		Shader(
-			PROJECT_DIR "/build/particle2D.vert",
+			PROJECT_DIR "/src/shaders/particle2D.vert",
 			nullptr, nullptr, nullptr,
-			PROJECT_DIR "/build/particle2D.frag");
+			PROJECT_DIR "/src/shaders/particle2D.frag");
 
 	if (!this->particleVAO2D)
 	{
@@ -2117,15 +2117,14 @@ drawModel()
 	glm::mat4 model_matrix = glm::mat4();
 	model_matrix = glm::translate(model_matrix, glm::vec3(point_list[point_index].x, point_list[point_index].y, point_list[point_index].z));
 
-	//model_matrix = glm::translate(model_matrix, glm::vec3(0, -10, 0));
 
+	model_matrix = glm::scale(model_matrix, glm::vec3(5.0f));
 	// add rotate matrix
 	model_matrix = model_matrix * calRotationXYZ(point_list[point_index], point_list[((point_index + 1) % point_list.size())], orient_list[point_index]);
 
-	model_matrix = glm::scale(model_matrix, glm::vec3(5.0f));
-	//model_matrix = glm::eulerAngleXYZ(0.0f, 10.0f, 0.0f) * model_matrix;
 	model_matrix = glm::rotate(model_matrix, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	model_matrix = glm::rotate(model_matrix, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	//model_matrix = glm::eulerAngleXYZ(0.0f, 10.0f, 0.0f) * model_matrix;
 	glUniformMatrix4fv(
 		glGetUniformLocation(this->modelShader->Program, "model"), 1, GL_FALSE, &model_matrix[0][0]);
 
