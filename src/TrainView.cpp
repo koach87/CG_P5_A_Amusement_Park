@@ -296,10 +296,13 @@ void TrainView::draw()
 	{
 		//initiailize VAO, VBO, Shader...
 
+
+		//initMonitor();
+		//if (!this->fbos)
+		//	this->fbos = new WaterFrameBuffers();
+
 		initSkyboxShader();
 		initUBO();
-		//initSineWater(); 
-
 		initModel();
 		initParticle();
 		initParticle2D();
@@ -416,6 +419,7 @@ void TrainView::draw()
 	glBindBufferRange(
 		GL_UNIFORM_BUFFER, /*binding point*/0, this->commom_matrices->ubo, 0, this->commom_matrices->size);
 
+	//fbos->bindReflectionFrameBuffer();
 	drawSkybox();
 	drawModel();
 	drawParticle();
@@ -431,6 +435,8 @@ void TrainView::draw()
 	drawModelChair(55);
 	drawModelChair(75);
 	drawFerris();
+	//fbos->unbindCurrentFrameBuffer();
+	//drawMonitor(0);
 	//drawCube();
 	//LoadHeightMap();
 	t_time += 0.01f;	
@@ -1525,31 +1531,31 @@ initMonitor()
 	}
 }
 
-//void TrainView::
-//drawMonitor(int mode)
-//{
-//	//bind shader
-//	this->monitorShader->Use();
-//
-//	if (mode == 1)
-//		this->fbos->reflectionTexture2D.bind(0);
-//	else
-//	{
-//		this->fbos->refractionTexture2D.bind(0);
-//	}
-//	glUniform1i(glGetUniformLocation(this->monitorShader->Program, "u_texture"), 0);
-//
-//	//bind VAO
-//	glBindVertexArray(this->monitor->vao);
-//
-//	glDrawElements(GL_TRIANGLES, this->monitor->element_amount, GL_UNSIGNED_INT, 0);
-//
-//	//unbind VAO
-//	glBindVertexArray(0);
-//
-//	//unbind shader(switch to fixed pipeline)
-//	glUseProgram(0);
-//}
+void TrainView::
+drawMonitor(int mode)
+{
+	//bind shader
+	this->monitorShader->Use();
+
+	if (mode == 1)
+		this->fbos->reflectionTexture2D.bind(0);
+	else
+	{
+		this->fbos->refractionTexture2D.bind(0);
+	}
+	glUniform1i(glGetUniformLocation(this->monitorShader->Program, "u_texture"), 0);
+
+	//bind VAO
+	glBindVertexArray(this->monitor->vao);
+
+	glDrawElements(GL_TRIANGLES, this->monitor->element_amount, GL_UNSIGNED_INT, 0);
+
+	//unbind VAO
+	glBindVertexArray(0);
+
+	//unbind shader(switch to fixed pipeline)
+	glUseProgram(0);
+}
 
 
 void TrainView::
@@ -1744,7 +1750,7 @@ initParticle2D()
 		GLfloat* texture_coordinate = new GLfloat[nr_particles2D * 2 * 2 * 2]();
 		//GLuint* element = new GLuint[nr_particles]();
 		//GLfloat* vertices = new GLfloat[nr_particles]();
-		float rainWidth = 0.2f;
+		float rainWidth = 3.0f;
 		float rainHeight = 1.0f;
 		for (int i = 0; i < nr_particles2D * 3 * 2 * 2; i += 3 * 2 * 2)
 		{
@@ -1800,7 +1806,7 @@ initParticle2D()
 void TrainView::
 drawParticle2D()
 {
-	glm::vec2 offset = glm::vec2(0.0f);
+	glm::vec2 offset = glm::vec2(-1.0f);
 	GLfloat dt = 0.1f;
 	GLuint nr_new_particles = 2;
 	// Add new particles

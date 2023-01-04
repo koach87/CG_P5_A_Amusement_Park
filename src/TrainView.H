@@ -64,10 +64,94 @@ class Model;
 #include "TrainWindow.H"
 #include<iostream>
 
-
+//class FilterFrameBuffers
+//{
+//	GLuint FILTER_WIDTH = 590;
+//	GLuint FILTER_HEIGHT = 590;
+//
+//	GLuint filterFrameBuffer;
+//	GLuint filterTexture;
+//	GLuint filterDepthBuffer;
+//	Texture2D filterTexture2D;
+//
+//	FilterFrameBuffers() {//call when loading the game
+//		initialiseFilterFrameBuffer();
+//	}
+//	void cleanUp() {//call when closing the game
+//		glDeleteFramebuffers(1, &reflectionFrameBuffer);
+//		glDeleteTextures(1, &reflectionTexture);
+//		glDeleteRenderbuffers(1, &reflectionDepthBuffer);
+//	}
+//	void bindReflectionFrameBuffer() {//call before rendering to this FBO
+//		bindFrameBuffer(reflectionFrameBuffer, REFLECTION_WIDTH, REFLECTION_HEIGHT);
+//		// glClearColor(1, 0, 0, 1);
+//		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//	}
+//
+//	void unbindCurrentFrameBuffer() {//call to switch to default frame buffer
+//		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+//		glViewport(0, 0, 590, 590);
+//	}
+//
+//	GLuint getReflectionTexture() {//get the resulting texture
+//		return reflectionTexture;
+//	}
+//
+//	void initialiseFilterFrameBuffer() {
+//		reflectionFrameBuffer = createFrameBuffer();
+//		reflectionTexture = createTextureAttachment(REFLECTION_WIDTH, REFLECTION_HEIGHT);
+//		reflectionTexture2D.setID(reflectionTexture);
+//		reflectionDepthBuffer = createDepthBufferAttachment(REFLECTION_WIDTH, REFLECTION_HEIGHT);
+//		unbindCurrentFrameBuffer();
+//	}
+//
+//	void bindFrameBuffer(int frameBuffer, int width, int height) {
+//		glBindTexture(GL_TEXTURE_2D, 0);
+//		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+//		glViewport(0, 0, width, height);
+//	}
+//
+//	GLuint createFrameBuffer() {
+//		GLuint frameBuffer;
+//		glGenFramebuffers(1, &frameBuffer);
+//		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+//		glDrawBuffer(GL_COLOR_ATTACHMENT0);
+//		return frameBuffer;
+//	}
+//
+//	GLuint createTextureAttachment(int width, int height) {
+//		GLuint texture;
+//		glGenTextures(1, &texture);
+//		glBindTexture(GL_TEXTURE_2D, texture);
+//		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0);
+//		return texture;
+//	}
+//
+//	GLuint createDepthTextureAttachment(int width, int height) {
+//		GLuint texture;
+//		glGenTextures(1, &texture);
+//		glBindTexture(GL_TEXTURE_2D, texture);
+//		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+//		glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texture, 0);
+//		return texture;
+//	}
+//
+//	GLuint createDepthBufferAttachment(int width, int height) {
+//		GLuint depthBuffer;
+//		glGenRenderbuffers(1, &depthBuffer);
+//		glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+//		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+//		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+//		return depthBuffer;
+//	}
+//};
 
 class WaterFrameBuffers
-{
+{ 
 public:
 	GLuint REFLECTION_WIDTH = 590;
 	GLuint REFLECTION_HEIGHT = 590;
@@ -298,6 +382,7 @@ class TrainView : public Fl_Gl_Window
 
 		// fbo
 		WaterFrameBuffers* fbos = nullptr;
+		//FilterFrameBuffers* filterFbos = nullptr;
 
 		//campos
 		glm::vec3 cameraPosition;
