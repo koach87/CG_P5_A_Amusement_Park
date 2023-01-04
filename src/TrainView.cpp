@@ -1012,9 +1012,9 @@ void TrainView::
 initSkyboxShader()
 {
 	if (!skyboxShader) {
-		this->skyboxShader = new Shader(PROJECT_DIR "/src/shaders/skyboxVS.glsl",
+		this->skyboxShader = new Shader( "src/shaders/skyboxVS.glsl",
 			nullptr, nullptr, nullptr,
-			PROJECT_DIR "/src/shaders/skyboxFS.glsl");
+			 "src/shaders/skyboxFS.glsl");
 
 		GLfloat skyboxVertices[] = {
 
@@ -1071,12 +1071,12 @@ initSkyboxShader()
 
 		// load textures
 		vector<std::string> faces;
-		faces.push_back(PROJECT_DIR"/Images/skybox/left.jpg");
-		faces.push_back(PROJECT_DIR"/Images/skybox/right.jpg");
-		faces.push_back(PROJECT_DIR"/Images/skybox/top.jpg");
-		faces.push_back(PROJECT_DIR"/Images/skybox/bottom.jpg");
-		faces.push_back(PROJECT_DIR"/Images/skybox/front.jpg");
-		faces.push_back(PROJECT_DIR"/Images/skybox/back.jpg");
+		faces.push_back("images/skybox/left.jpg");
+		faces.push_back("images/skybox/right.jpg");
+		faces.push_back("images/skybox/top.jpg");
+		faces.push_back("images/skybox/bottom.jpg");
+		faces.push_back("images/skybox/front.jpg");
+		faces.push_back("images/skybox/back.jpg");
 		cubemapTexture = loadCubemap(faces);
 	}
 
@@ -1308,9 +1308,9 @@ initSineWater()
 	if (!this->sineWaterShader)
 		this->sineWaterShader = new
 		Shader(
-			PROJECT_DIR "/src/shaders/sineVS.glsl",
+			 "src/shaders/sineVS.glsl",
 			nullptr, nullptr, nullptr,
-			PROJECT_DIR "/src/shaders/sineFS.glsl");
+			 "src/shaders/sineFS.glsl");
 
 	if (!this->sineWater) {
 
@@ -1493,49 +1493,49 @@ initMonitor()
 		case 1:
 			this->monitorShader = new
 				Shader(
-					PROJECT_DIR "/src/shaders/monitorVS.glsl",
+					 "src/shaders/monitorVS.glsl",
 					nullptr, nullptr, nullptr,
-					PROJECT_DIR "/src/shaders/monitorFS.glsl"
+					 "src/shaders/monitorFS.glsl"
 				);
 			break;
 		case 2:
 			this->monitorShader = new
 				Shader(
-					PROJECT_DIR "/src/shaders/monitorVS.glsl",
+					 "src/shaders/monitorVS.glsl",
 					nullptr, nullptr, nullptr,
-					PROJECT_DIR "/src/shaders/GrayScale.glsl"
+					 "src/shaders/GrayScale.glsl"
 				);
 			break;
 		case 3:
 			this->monitorShader = new
 				Shader(
-					PROJECT_DIR "/src/shaders/monitorVS.glsl",
+					 "src/shaders/monitorVS.glsl",
 					nullptr, nullptr, nullptr,
-					PROJECT_DIR "/src/shaders/Blur.glsl"
+					 "src/shaders/Blur.glsl"
 				);
 			break;
 		case 4:
 			this->monitorShader = new
 				Shader(
-					PROJECT_DIR "/src/shaders/monitorVS.glsl",
+					 "src/shaders/monitorVS.glsl",
 					nullptr, nullptr, nullptr,
-					PROJECT_DIR "/src/shaders/Toonify Post Processing Filter.glsl"
+					 "src/shaders/Toonify Post Processing Filter.glsl"
 				);
 			break;
 		case 5:
 			this->monitorShader = new
 				Shader(
-					PROJECT_DIR "/src/shaders/monitorVS.glsl",
+					 "src/shaders/monitorVS.glsl",
 					nullptr, nullptr, nullptr,
-					PROJECT_DIR "/src/shaders/Thermal Vision.glsl"
+					 "src/shaders/Thermal Vision.glsl"
 				);
 			break;
 		default:
 			this->monitorShader = new
 				Shader(
-					PROJECT_DIR "/src/shaders/monitorVS.glsl",
+					 "src/shaders/monitorVS.glsl",
 					nullptr, nullptr, nullptr,
-					PROJECT_DIR "/src/shaders/monitorFS.glsl"
+					 "src/shaders/monitorFS.glsl"
 				);
 			break;
 		}
@@ -1627,9 +1627,9 @@ initParticle()
 	if (!this->particleShader)
 		this->particleShader = new
 		Shader(
-			PROJECT_DIR "/src/shaders/particle.vert",
+			 "src/shaders/particle.vert",
 			nullptr, nullptr, nullptr,
-			PROJECT_DIR "/src/shaders/particle.frag");
+			 "src/shaders/particle.frag");
 
 	if (!this->particleVAO)
 	{
@@ -1798,9 +1798,9 @@ initParticle2D()
 	if (!this->particleShader2D)
 		this->particleShader2D = new
 		Shader(
-			PROJECT_DIR "/src/shaders/particle2D.vert",
+			 "src/shaders/particle2D.vert",
 			nullptr, nullptr, nullptr,
-			PROJECT_DIR "/src/shaders/particle2D.frag");
+			 "src/shaders/particle2D.frag");
 
 	if (!this->particleVAO2D)
 	{
@@ -2020,7 +2020,7 @@ void TrainView::
 LoadHeightMap()
 {
 	int width, height, nChannels;
-	unsigned char* data = stbi_load(PROJECT_DIR"/Images/heightmap.png",
+	unsigned char* data = stbi_load("images/heightmap.png",
 		&width, &height, &nChannels,
 		0);
 	std::vector<float> vertices;
@@ -2099,11 +2099,11 @@ void TrainView::
 initModel()
 {
 	if (!modelShader) {
-		this->modelShader = new Shader(PROJECT_DIR "/src/shaders/1.model_loading.vs",
+		this->modelShader = new Shader( "src/shaders/1.model_loading.vs",
 			nullptr, nullptr, nullptr,
-			PROJECT_DIR "/src/shaders/1.model_loading.fs");
+			 "src/shaders/1.model_loading.fs");
 
-		ourModel = new Model(PROJECT_DIR"/src/Thomas/Thomas.obj");
+		ourModel = new Model("src/Thomas/Thomas.obj");
 	}
 
 }
@@ -2140,10 +2140,10 @@ void TrainView::
 initModelTree()
 {
 	if (!modelTreeShader) {
-		this->modelTreeShader = new Shader(PROJECT_DIR "/src/shaders/1.model_loading.vs",
+		this->modelTreeShader = new Shader( "src/shaders/1.model_loading.vs",
 			nullptr, nullptr, nullptr,
-			PROJECT_DIR "/src/shaders/1.model_loading.fs");
-		ourModelTree = new Model(PROJECT_DIR"/src/Palm_Tree/Palm_Tree.obj");
+			 "src/shaders/1.model_loading.fs");
+		ourModelTree = new Model("src/Palm_Tree/Palm_Tree.obj");
 	}
 }
 
@@ -2173,11 +2173,11 @@ void TrainView::
 initModelTerrain()
 {
 	if (!modelTerrainShader) {
-		this->modelTerrainShader = new Shader(PROJECT_DIR "/src/shaders/1.model_loading.vs",
+		this->modelTerrainShader = new Shader( "src/shaders/1.model_loading.vs",
 			nullptr, nullptr, nullptr,
-			PROJECT_DIR "/src/shaders/1.model_loading.fs");
+			 "src/shaders/1.model_loading.fs");
 
-		ourModelTerrain = new Model(PROJECT_DIR"/src/Small Tropical Island/Small Tropical Island.obj");
+		ourModelTerrain = new Model("src/Small Tropical Island/Small Tropical Island.obj");
 	}
 }
 
@@ -2207,11 +2207,11 @@ void TrainView::
 initModelChair()
 {
 	if (!modelChairShader) {
-		this->modelChairShader = new Shader(PROJECT_DIR "/src/shaders/1.model_loading.vs",
+		this->modelChairShader = new Shader( "src/shaders/1.model_loading.vs",
 			nullptr, nullptr, nullptr,
-			PROJECT_DIR "/src/shaders/1.model_loading.fs");
+			 "src/shaders/1.model_loading.fs");
 
-		ourModelChair = new Model(PROJECT_DIR"/src/maps/office chair.obj");
+		ourModelChair = new Model("src/maps/office chair.obj");
 	}
 }
 
