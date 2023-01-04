@@ -143,13 +143,13 @@ TrainWindow(const int x, const int y)
 		pty+=30;
 
 
-		// add option to select mode
-		waveBrowser = new Fl_Browser(605, pty, 120, 75, "Wave Type");
-		waveBrowser->type(2);		// select
-		waveBrowser->callback((Fl_Callback*)damageCB, this);
-		waveBrowser->add("Sine wave");
-		waveBrowser->add("Heightmap");
-		waveBrowser->select(1);
+		//// add option to select mode
+		//waveBrowser = new Fl_Browser(605, pty, 120, 75, "Wave Type");
+		//waveBrowser->type(2);		// select
+		//waveBrowser->callback((Fl_Callback*)damageCB, this);
+		//waveBrowser->add("Sine wave");
+		//waveBrowser->add("Heightmap");
+		//waveBrowser->select(1);
 
 		pty += 110;
 
@@ -186,7 +186,7 @@ TrainWindow(const int x, const int y)
 		pty += 30;
 
 
-		particleLife = new Fl_Value_Slider(655, pty, 140, 20, "Particle Life");
+		particleLife = new Fl_Value_Slider(655, pty, 140, 20, "ParticleLife");
 		particleLife->range(0.10, 3.00);
 		particleLife->value(1.00);
 		particleLife->align(FL_ALIGN_LEFT);

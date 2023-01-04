@@ -355,11 +355,13 @@ void TrainView::draw()
 
 		initSkyboxShader();
 		initUBO();
-		initSineWater(); 
+		//initSineWater(); 
+
 		initModel();
 		initParticle();
 		initModelTree();
 		initModelTerrain();
+		initModelChair();
 
 	}
 	else
@@ -472,13 +474,16 @@ void TrainView::draw()
 	drawSkybox();
 	drawModel();
 	drawParticle();
-	drawModelTree(glm::vec3(100.0f + (float)tw->treeX->value(), 0.0f + (float)tw->treeY->value(), 50.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
-	drawModelTree(glm::vec3(-50.0f + (float)tw->treeX->value(), 0.0f + (float)tw->treeY->value(), -50.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
-	drawModelTree(glm::vec3(50.0f + (float)tw->treeX->value(), 0.0f + (float)tw->treeY->value(), -100.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
-	drawModelTree(glm::vec3(-100.0f + (float)tw->treeX->value(), 0.0f + (float)tw->treeY->value(), 50.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
-	drawModelTree(glm::vec3(20.0f + (float)tw->treeX->value(), 0.0f + (float)tw->treeY->value(), -30.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
-	drawModelTree(glm::vec3(-100.0f + (float)tw->treeX->value(), 0.0f + (float)tw->treeY->value(), -100.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
+	drawModelTree(glm::vec3(100.0f + (float)tw->treeX->value(), -50.0f + (float)tw->treeY->value(), 50.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
+	drawModelTree(glm::vec3(-50.0f + (float)tw->treeX->value(), -50.0f + (float)tw->treeY->value(), -50.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
+	drawModelTree(glm::vec3(50.0f + (float)tw->treeX->value(), -50.0f + (float)tw->treeY->value(), -100.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
+	drawModelTree(glm::vec3(-100.0f + (float)tw->treeX->value(), -50.0f + (float)tw->treeY->value(), 50.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
+	drawModelTree(glm::vec3(20.0f + (float)tw->treeX->value(), -50.0f + (float)tw->treeY->value(), -30.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
+	drawModelTree(glm::vec3(-100.0f + (float)tw->treeX->value(), -50.0f + (float)tw->treeY->value(), -100.0f + (float)tw->treeZ->value()), (float)tw->treeScale->value());
 	drawModelTerrain();
+	drawModelChair(35);
+	drawModelChair(55);
+	drawModelChair(75);
 	//LoadHeightMap();
 	t_time += 0.01f;	
 }
@@ -1014,14 +1019,7 @@ initModel()
 			nullptr, nullptr, nullptr,
 			PROJECT_DIR "/src/shaders/1.model_loading.fs");
 
-		//ourModel = new Model(PROJECT_DIR"/src/mountain2/MountainTerrain.obj");
-		//ourModel = new Model(PROJECT_DIR"/src/mountain/mount.blend1.obj");
-		//ourModel = new Model(PROJECT_DIR"/src/SnowTerrain/SnowTerrain.obj");
-		//ourModel = new Model(PROJECT_DIR"/src/car/bugatti.obj");
-		ourModel = new Model(PROJECT_DIR"/src/backpack/backpack.obj");
-		ourModel = new Model(PROJECT_DIR"/src/Palm_Tree/Palm_Tree.obj");
-		//ourModel = new Model(PROJECT_DIR"/src/lowpolytree/lowpolytree.obj");
-		//ourModel = new Model(PROJECT_DIR"/src/Palm_Tree/Palm_Tree.obj");
+		ourModel = new Model(PROJECT_DIR"/src/Thomas/Thomas.obj");
 	}
 	
 }
@@ -1040,9 +1038,10 @@ drawModel()
 	// add rotate matrix
 	model_matrix = model_matrix * calRotationXYZ(point_list[point_index], point_list[((point_index + 1) % point_list.size())], orient_list[point_index]);
 
-	model_matrix = glm::scale(model_matrix, glm::vec3(0.3f));
+	model_matrix = glm::scale(model_matrix, glm::vec3(5.0f));
 	//model_matrix = glm::eulerAngleXYZ(0.0f, 10.0f, 0.0f) * model_matrix;
-	//model_matrix = glm::rotate(model_matrix, 90.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+	model_matrix = glm::rotate(model_matrix, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	model_matrix = glm::rotate(model_matrix, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv(
 		glGetUniformLocation(this->modelShader->Program, "model"), 1, GL_FALSE, &model_matrix[0][0]);
 	
@@ -2009,7 +2008,7 @@ drawModelTerrain()
 	glm::mat4 model_matrix = glm::mat4();
 
 	model_matrix = glm::translate(model_matrix, glm::vec3(0.0f,-70.0f,0.0f));
-	model_matrix = glm::scale(model_matrix, glm::vec3(0.8f));
+	model_matrix = glm::scale(model_matrix, glm::vec3(0.8f, 0.5f, 0.8f));
 	//model_matrix = glm::rotate(model_matrix, (float)glm::radians(90.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
 
 	glUniformMatrix4fv(
@@ -2017,6 +2016,55 @@ drawModelTerrain()
 
 	//cout << ourModel->meshes.size();
 	ourModelTerrain->Draw(*this->modelTerrainShader);
+
+	glUseProgram(0);
+}
+
+
+void TrainView::
+initModelChair()
+{
+	if (!modelChairShader) {
+		this->modelChairShader = new Shader(PROJECT_DIR "/src/shaders/1.model_loading.vs",
+			nullptr, nullptr, nullptr,
+			PROJECT_DIR "/src/shaders/1.model_loading.fs");
+
+		ourModelChair = new Model(PROJECT_DIR"/src/maps/office chair.obj");
+	}
+}
+
+void TrainView::
+drawModelChair(int interval)
+{
+	// don't forget to enable shader before setting uniforms
+	this->modelChairShader->Use();
+
+	// error hadling
+	if ((point_list.size() - interval) < 0)
+		return;
+
+	glm::mat4 model_matrix = glm::mat4();
+	model_matrix = glm::translate(model_matrix, glm::vec3(
+		point_list[(point_list.size() - interval + point_index) % point_list.size()].x,
+		point_list[(point_list.size() - interval + point_index) % point_list.size()].y - 5.0f,
+		point_list[(point_list.size() - interval + point_index) % point_list.size()].z
+	));
+	// add rotate matrix
+	model_matrix = glm::scale(model_matrix, glm::vec3(20.0f));
+	model_matrix = model_matrix * calRotationXYZ(
+		point_list[(point_list.size() - interval + point_index) % point_list.size()],
+		point_list[(point_list.size() - interval + point_index + 1) % point_list.size()],
+		orient_list[(point_list.size() - interval + point_index) % point_list.size()]
+	);
+
+	model_matrix = glm::rotate(model_matrix, (float)glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	model_matrix = glm::rotate(model_matrix, (float)glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+	glUniformMatrix4fv(
+		glGetUniformLocation(this->modelChairShader->Program, "model"), 1, GL_FALSE, &model_matrix[0][0]);
+
+	//cout << ourModel->meshes.size();
+	ourModelChair->Draw(*this->modelChairShader);
 
 	glUseProgram(0);
 }

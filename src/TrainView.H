@@ -394,4 +394,12 @@ class TrainView : public Fl_Gl_Window
 		Shader* modelTerrainShader = nullptr;
 		Model* ourModelTerrain = nullptr;
 
+
+
+		// model shader - chair
+
+		void initModelChair();
+		void drawModelChair(int);
+		Shader* modelChairShader = nullptr;
+		Model* ourModelChair = nullptr;
 };
